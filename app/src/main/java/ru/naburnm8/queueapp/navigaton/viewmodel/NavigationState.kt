@@ -1,17 +1,18 @@
 package ru.naburnm8.queueapp.navigaton.viewmodel
 
-sealed class NavigationState {
-    sealed class QueueConsumer : NavigationState () {
-        data object MyQueue : QueueConsumer()
-        data object MyRequests : QueueConsumer()
-        data object MyProfile : QueueConsumer()
-    }
+import kotlinx.serialization.Serializable
+import ru.naburnm8.queueapp.queueConsumer.navigation.QueueConsumerFlowNavigation
+import ru.naburnm8.queueapp.queueOperator.navigation.QueueOperatorFlowNavigation
 
-    sealed class QueueOperator : NavigationState() {
-        data object MyQueues : QueueOperator()
-        data object MySettings : QueueOperator()
-        data object MyProfile : QueueOperator()
-    }
+
+sealed class NavigationState {
+    data class QueueConsumer (
+        val route: QueueConsumerFlowNavigation
+    ) : NavigationState ()
+
+    data class QueueOperator (
+        val route: QueueOperatorFlowNavigation
+    ) : NavigationState()
 
     data object Unauthorized : NavigationState()
 

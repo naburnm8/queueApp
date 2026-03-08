@@ -34,6 +34,9 @@ import org.koin.androidx.compose.koinViewModel
 import ru.naburnm8.queueapp.R
 import ru.naburnm8.queueapp.navigaton.viewmodel.NavigationState
 import ru.naburnm8.queueapp.navigaton.viewmodel.NavigationViewmodel
+import ru.naburnm8.queueapp.queueConsumer.navigation.QueueConsumerFlowNavigation
+import ru.naburnm8.queueapp.queueConsumer.ui.QueueConsumerFlow
+import ru.naburnm8.queueapp.queueOperator.navigation.QueueOperatorFlowNavigation
 
 private data class NavigationButtonConfig(
     val state: NavigationState,
@@ -49,19 +52,19 @@ fun QueueConsumerNavigationBar(
 ) {
     val buttons = listOf(
         NavigationButtonConfig(
-            state = NavigationState.QueueConsumer.MyQueue,
+            state = NavigationState.QueueConsumer(QueueConsumerFlowNavigation.MyQueue),
             painter = painterResource(R.drawable.queue),
             contentDescription = stringResource(R.string.my_queues),
             onClick = {}
         ),
         NavigationButtonConfig(
-            state = NavigationState.QueueConsumer.MyRequests,
+            state = NavigationState.QueueConsumer(QueueConsumerFlowNavigation.MyRequests),
             painter = painterResource(R.drawable.submission_request), // assignment on material icons
             contentDescription = stringResource(R.string.my_submission_requests),
             onClick = {}
         ),
         NavigationButtonConfig(
-            state = NavigationState.QueueConsumer.MyProfile,
+            state = NavigationState.QueueConsumer(QueueConsumerFlowNavigation.MyProfile),
             painter = painterResource(R.drawable.profile),
             contentDescription = stringResource(R.string.profile),
             onClick = {}
@@ -82,19 +85,19 @@ fun QueueOperatorNavigationBar(
 ) {
     val buttons = listOf(
         NavigationButtonConfig(
-            state = NavigationState.QueueOperator.MyQueues,
+            state = NavigationState.QueueOperator(QueueOperatorFlowNavigation.MyQueues),
             painter = painterResource(R.drawable.queue),
             contentDescription = stringResource(R.string.my_queues),
             onClick = {}
         ),
         NavigationButtonConfig(
-            state = NavigationState.QueueOperator.MySettings,
+            state = NavigationState.QueueOperator(QueueOperatorFlowNavigation.Settings),
             painter = painterResource(R.drawable.settings),
             contentDescription = stringResource(R.string.settings),
             onClick = {}
         ),
         NavigationButtonConfig(
-            state = NavigationState.QueueOperator.MyProfile,
+            state = NavigationState.QueueOperator(QueueOperatorFlowNavigation.Profile),
             painter = painterResource(R.drawable.profile),
             contentDescription = stringResource(R.string.profile),
             onClick = {}
