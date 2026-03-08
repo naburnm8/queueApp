@@ -16,11 +16,11 @@ class NavigationViewmodel : ViewModel() {
         _stateFlow.value = nextState
     }
 
-    fun authorizeAsQueueConsumer(authDetails: AuthorizationResponse) {
+    fun authorizeAsQueueConsumer() {
         _stateFlow.value = NavigationState.QueueConsumer(QueueConsumerFlowNavigation.MyQueue)
     }
 
-    fun authorizeAsQueueOperator(authDetails: AuthorizationResponse) {
+    fun authorizeAsQueueOperator() {
         _stateFlow.value = NavigationState.QueueOperator(QueueOperatorFlowNavigation.MyQueues)
     }
 

@@ -17,11 +17,11 @@ fun AuthorizationFlow(
 
     Column(modifier = Modifier.fillMaxSize()) {
 
-        Button(onClick = {navigationViewmodel.authorizeAsQueueOperator(AuthorizationResponse("s","s","s"))}) {
+        Button(onClick = {navigationViewmodel.authorizeAsQueueOperator()}) {
             Text("Авторизоваться как учитель")
         }
 
-        Button(onClick = {navigationViewmodel.authorizeAsQueueConsumer(AuthorizationResponse("s","s","s"))}) {
+        Button(onClick = {navigationViewmodel.authorizeAsQueueConsumer()}) {
             Text("Авторизоваться как студент")
         }
 
