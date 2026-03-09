@@ -13,8 +13,8 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.clickable
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,6 +37,7 @@ import ru.naburnm8.queueapp.navigaton.viewmodel.NavigationViewmodel
 import ru.naburnm8.queueapp.queueConsumer.navigation.QueueConsumerFlowNavigation
 import ru.naburnm8.queueapp.queueConsumer.ui.QueueConsumerFlow
 import ru.naburnm8.queueapp.queueOperator.navigation.QueueOperatorFlowNavigation
+import ru.naburnm8.queueapp.ui.theme.QueueAppTheme
 
 private data class NavigationButtonConfig(
     val state: NavigationState,
@@ -121,7 +122,7 @@ private fun AbstractNavigationBar(
 
     Row (
         modifier = modifier.fillMaxWidth()
-            .background(MaterialTheme.colorScheme.background).padding(top = 10.dp, bottom = 30.dp),
+            .padding(top = 10.dp, bottom = 30.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
@@ -153,38 +154,26 @@ private fun NavigationButton(
         modifier = modifier
             .padding(4.dp)
             .shadow(
-                elevation = if (isSelected) 20.dp else 10.dp,
+                elevation = if (isSelected) 5.dp else 20.dp,
                 clip = true,
                 shape = RoundedCornerShape(10.dp),
                 spotColor = mainColor,
                 ambientColor = mainColor
             )
-            .background(MaterialTheme.colorScheme.onBackground)
-            .height(90.dp)
-            .width(90.dp),
+            .background(MaterialTheme.colorScheme.primaryContainer)
+            .height(60.dp)
+            .width(60.dp)
+            .clickable(onClick = onClick),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        IconButton(
-            onClick = onClick,
+        Icon(
+            painter = painter,
+            contentDescription = contentDescription,
+            tint = mainColor,
             modifier = Modifier
-                .wrapContentWidth(Alignment.CenterHorizontally)
-                .wrapContentHeight(Alignment.CenterVertically)
-        ) {
-            Icon(
-                painter = painter,
-                contentDescription = contentDescription,
-                tint = mainColor,
-                modifier = Modifier.fillMaxSize()
-            )
-        }
-
-        Text (
-            text = contentDescription,
-            textAlign = TextAlign.Center,
-            color = mainColor,
-            fontSize = 14.sp,
-            modifier = Modifier.wrapContentSize()
+                .fillMaxSize()
+                .padding(8.dp)
         )
     }
 }
@@ -192,10 +181,12 @@ private fun NavigationButton(
 @Composable
 @Preview
 private fun NavigationButtonPreview() {
-    NavigationButton(
-        painter = painterResource(R.drawable.ic_launcher_foreground),
-        contentDescription = "Android",
-        isSelected = false,
-        onClick = {}
-    )
+    QueueAppTheme (darkTheme = false) {
+        NavigationButton(
+            painter = painterResource(R.drawable.queue),
+            contentDescription = "Android",
+            isSelected = false,
+            onClick = {}
+        )
+    }
 }
