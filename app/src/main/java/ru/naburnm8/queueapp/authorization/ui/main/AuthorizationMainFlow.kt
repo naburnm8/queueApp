@@ -2,6 +2,7 @@ package ru.naburnm8.queueapp.authorization.ui.main
 
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -38,7 +39,7 @@ fun AuthorizationMainFlow(
             popExitTransition = { slideOutHorizontally(targetOffsetX = { it }) }
         ) {
             LoginScreen(
-                modifier = modifier,
+                modifier = modifier.fillMaxSize(),
                 onLoginClick = {email, pass -> vm.tryLogin(email, pass)},
                 onRegistrationClick = {
                     vm.changeMainFlowState(AuthorizationMainNavigation.REGISTRATION_CHOICE)
@@ -54,7 +55,7 @@ fun AuthorizationMainFlow(
             popExitTransition = { slideOutHorizontally(targetOffsetX = { it }) }
         ) {
             RegistrationChoiceScreen(
-                modifier = modifier,
+                modifier = modifier.fillMaxSize(),
                 onStudentRegistrationClick = {
                     vm.changeMainFlowState(AuthorizationMainNavigation.STUDENT_REGISTRATION)
                     navController.navigate(AuthorizationMainNavigation.STUDENT_REGISTRATION.name)

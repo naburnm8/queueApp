@@ -1,6 +1,7 @@
 package ru.naburnm8.queueapp.authorization.viewmodel
 
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,6 +44,7 @@ class AuthorizationViewmodel (
             }.onFailure {
                 _stateFlow.value = AuthorizationState.Error(it.message ?: "Unknown error")
             }
+            Log.d("AuthorizationViewmodel", "Current state: ${_stateFlow.value}")
         }
 
 

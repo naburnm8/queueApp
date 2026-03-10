@@ -26,8 +26,8 @@ class NavigationViewmodel(
         viewModelScope.launch {
             sessionManager.loginFlow.collect {
                 when (it) {
-                    Role.QCONSUMER -> authorizeAsQueueConsumer()
-                    Role.QOPERATOR -> authorizeAsQueueOperator()
+                    Role.ROLE_QCONSUMER -> authorizeAsQueueConsumer()
+                    Role.ROLE_QOPERATOR -> authorizeAsQueueOperator()
                 }
             }
         }

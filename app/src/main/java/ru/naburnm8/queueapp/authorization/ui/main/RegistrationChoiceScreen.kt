@@ -46,8 +46,8 @@ fun RegistrationChoiceScreen(
     onStudentRegistrationClick: () -> Unit,
     onTeacherRegistrationClick: () -> Unit,
     availableRoles: List<RoleEntity> = listOf(
-        RoleEntity(identifier = Role.QCONSUMER, displayName = stringResource(R.string.student)),
-        RoleEntity(identifier = Role.QOPERATOR, displayName = stringResource(R.string.teacher))
+        RoleEntity(identifier = Role.ROLE_QCONSUMER, displayName = stringResource(R.string.student)),
+        RoleEntity(identifier = Role.ROLE_QOPERATOR, displayName = stringResource(R.string.teacher))
     )
 ){
     var chosenRole by rememberSaveable { mutableStateOf(availableRoles[0].identifier) }
@@ -84,7 +84,7 @@ fun RegistrationChoiceScreen(
 
         Button(
             onClick = {
-                if (chosenRole == Role.QCONSUMER) {
+                if (chosenRole == Role.ROLE_QCONSUMER) {
                     onStudentRegistrationClick()
                 } else {
                     onTeacherRegistrationClick()
