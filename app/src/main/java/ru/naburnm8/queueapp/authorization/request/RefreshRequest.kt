@@ -1,5 +1,8 @@
 package ru.naburnm8.queueapp.authorization.request
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class RefreshRequest(
     val refreshToken: String
 )

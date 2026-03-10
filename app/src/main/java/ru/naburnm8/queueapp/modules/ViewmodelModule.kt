@@ -8,10 +8,10 @@ import ru.naburnm8.queueapp.navigaton.viewmodel.NavigationViewmodel
 
 val viewmodelModule = module {
     viewModel{
-        NavigationViewmodel()
+        NavigationViewmodel(get())
     }
 
     viewModel {
-        AuthorizationViewmodel()
+        AuthorizationViewmodel(get(), get())
     }
 }
