@@ -25,4 +25,6 @@
     <string name="registration_success">Registration success!</string>
     <string name="proceed_to_login">Proceed to login</string>
     <string name="registration_failed">Registration failed</string>
+    <string name="teacher_registration">Teacher registration</string>
+    <string name="teacher_integration_notice">Sorry, teacher accounts can\'t be registered without an integration. Please contact staff.</string>
 </resources>

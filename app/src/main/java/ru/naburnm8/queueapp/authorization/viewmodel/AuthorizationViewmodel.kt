@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import okio.IOException
 import ru.naburnm8.queueapp.R
-import ru.naburnm8.queueapp.authorization.SessionManager
+import ru.naburnm8.queueapp.authorization.session.SessionManager
 import ru.naburnm8.queueapp.authorization.entity.IntegrationEntity
 import ru.naburnm8.queueapp.authorization.entity.RegisterStudentEntity
 import ru.naburnm8.queueapp.authorization.entity.RegisterTeacherEntity

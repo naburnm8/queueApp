@@ -5,7 +5,7 @@ import okhttp3.Authenticator
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
-import ru.naburnm8.queueapp.authorization.SessionManager
+import ru.naburnm8.queueapp.authorization.session.SessionManager
 
 class TokenAuthenticator(
     private val tokenStorage: TokenStorage,

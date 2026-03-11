@@ -16,4 +16,6 @@ sealed class NavigationState {
 
     data object Unauthorized : NavigationState()
 
+    data object Loading : NavigationState()
+
 }

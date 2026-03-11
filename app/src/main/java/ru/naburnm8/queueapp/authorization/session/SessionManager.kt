@@ -1,4 +1,4 @@
-package ru.naburnm8.queueapp.authorization
+package ru.naburnm8.queueapp.authorization.session
 
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow

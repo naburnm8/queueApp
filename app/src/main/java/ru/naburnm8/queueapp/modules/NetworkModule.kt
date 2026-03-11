@@ -13,7 +13,7 @@ import ru.naburnm8.queueapp.authorization.api.AuthorizationApi
 import ru.naburnm8.queueapp.authorization.api.RefreshApi
 import ru.naburnm8.queueapp.authorization.api.IntegrationApi
 import ru.naburnm8.queueapp.authorization.AuthorizationInterceptor
-import ru.naburnm8.queueapp.authorization.SessionManager
+import ru.naburnm8.queueapp.authorization.session.SessionManager
 import ru.naburnm8.queueapp.authorization.api.RegistrationApi
 import ru.naburnm8.queueapp.authorization.token.TokenAuthenticator
 import ru.naburnm8.queueapp.authorization.token.TokenRefresher
