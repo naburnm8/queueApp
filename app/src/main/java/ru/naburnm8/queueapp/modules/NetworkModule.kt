@@ -14,6 +14,7 @@ import ru.naburnm8.queueapp.authorization.api.RefreshApi
 import ru.naburnm8.queueapp.authorization.api.IntegrationApi
 import ru.naburnm8.queueapp.authorization.AuthorizationInterceptor
 import ru.naburnm8.queueapp.authorization.SessionManager
+import ru.naburnm8.queueapp.authorization.api.RegistrationApi
 import ru.naburnm8.queueapp.authorization.token.TokenAuthenticator
 import ru.naburnm8.queueapp.authorization.token.TokenRefresher
 import ru.naburnm8.queueapp.authorization.token.TokenRefresherImpl
@@ -67,6 +68,10 @@ val networkModule = module {
 
     single<IntegrationApi> {
         get<Retrofit>(named("auth_retrofit")).create(IntegrationApi::class.java)
+    }
+
+    single<RegistrationApi> {
+        get<Retrofit>(named("auth_retrofit")).create(RegistrationApi::class.java)
     }
 
     single<TokenRefresher> {

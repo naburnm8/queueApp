@@ -13,4 +13,13 @@
     <string name="teacher">Teacher</string>
     <string name="student">Student</string>
     <string name="next">Next</string>
+    <string name="register_as_student">Student registration</string>
+    <string name="error_fetching_integrations">Error while fetching integrations</string>
+    <string name="choose_integration">Which service do you want to register with?</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="patronymic">Patronymic</string>
+    <string name="academic_group">Academic group</string>
+    <string name="telegram">Telegram tag</string>
+    <string name="slide_to_confirm">Slide to confirm</string>
 </resources>

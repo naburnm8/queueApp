@@ -9,16 +9,18 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import okio.IOException
 import ru.naburnm8.queueapp.authorization.SessionManager
+import ru.naburnm8.queueapp.authorization.entity.IntegrationEntity
 import ru.naburnm8.queueapp.authorization.entity.RegisterStudentEntity
 import ru.naburnm8.queueapp.authorization.entity.RegisterTeacherEntity
 import ru.naburnm8.queueapp.authorization.navigation.AuthorizationMainNavigation
 import ru.naburnm8.queueapp.authorization.repository.AuthorizationRepository
+import ru.naburnm8.queueapp.authorization.repository.IntegrationRepository
 import ru.naburnm8.queueapp.authorization.request.LoginRequest
 
 
 class AuthorizationViewmodel (
     private val sessionManager: SessionManager,
-    private val repository: AuthorizationRepository
+    private val repository: AuthorizationRepository,
 ) : ViewModel() {
     private var _stateFlow = MutableStateFlow<AuthorizationState>(AuthorizationState.Main(
         AuthorizationMainNavigation.LOGIN))
@@ -47,14 +49,6 @@ class AuthorizationViewmodel (
             Log.d("AuthorizationViewmodel", "Current state: ${_stateFlow.value}")
         }
 
-
-    }
-
-    fun tryRegisterStudent(req: RegisterStudentEntity) {
-
-    }
-
-    fun tryRegisterTeacher(req: RegisterTeacherEntity) {
 
     }
 }

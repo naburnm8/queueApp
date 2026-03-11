@@ -11,14 +11,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import org.koin.androidx.compose.koinViewModel
+import ru.naburnm8.queueapp.authorization.entity.RegisterStudentEntity
 import ru.naburnm8.queueapp.authorization.navigation.AuthorizationMainNavigation
 import ru.naburnm8.queueapp.authorization.viewmodel.AuthorizationState
 import ru.naburnm8.queueapp.authorization.viewmodel.AuthorizationViewmodel
+import ru.naburnm8.queueapp.authorization.viewmodel.RegistrationViewmodel
 
 @Composable
 fun AuthorizationMainFlow(
     modifier: Modifier = Modifier,
     vm: AuthorizationViewmodel = koinViewModel(),
+    registrationVm: RegistrationViewmodel = koinViewModel()
 ){
     val state by vm.stateFlow.collectAsState()
 
@@ -73,6 +76,15 @@ fun AuthorizationMainFlow(
             popEnterTransition = { slideInHorizontally(initialOffsetX = { -it }) },
             popExitTransition = { slideOutHorizontally(targetOffsetX = { it }) }
         ) {
+            registrationVm.fetchAllIntegrations()
+
+            val registrationState = registrationVm.integrationsStateFlow.collectAsState()
+
+            StudentRegistrationScreen(
+                modifier = Modifier.fillMaxSize(),
+                onRegisterClick = {req, int -> registrationVm.tryRegisterStudent(req, int)},
+                registrationState.value
+            )
 
         }
         composable (

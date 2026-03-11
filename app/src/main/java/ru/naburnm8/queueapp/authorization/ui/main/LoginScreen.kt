@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.naburnm8.queueapp.R
@@ -39,7 +40,12 @@ fun LoginScreen(
     onRegistrationClick: () -> Unit
 ) {
     var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("")}
+
+    var emailError by remember {mutableStateOf(false)}
+    var passwordError by remember {mutableStateOf(false)}
+
+
 
     Column(
         modifier = modifier
@@ -61,7 +67,8 @@ fun LoginScreen(
             label = { Text(stringResource(R.string.email)) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
-            leadingIcon = {Icon(imageVector = Icons.Default.AccountCircle, contentDescription = "")}
+            leadingIcon = {Icon(imageVector = Icons.Default.AccountCircle, contentDescription = "")},
+            isError = emailError,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -73,13 +80,27 @@ fun LoginScreen(
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             visualTransformation = PasswordVisualTransformation(),
-            leadingIcon = {Icon(imageVector = Icons.Default.Lock, contentDescription = "")}
+            leadingIcon = {Icon(imageVector = Icons.Default.Lock, contentDescription = "")},
+            isError = passwordError
         )
 
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(
-            onClick = { onLoginClick(email, password) },
+            onClick = {
+                if (email == "") {
+                    emailError = true
+                }
+                if (password == "") {
+                    passwordError = true
+                }
+                if (email != "" && password != ""){
+                    emailError = false
+                    passwordError = false
+                    onLoginClick(email, password)
+                }
+
+            },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(stringResource(R.string.login))

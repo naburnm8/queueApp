@@ -66,7 +66,11 @@ fun RegistrationChoiceScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         Column(
-            modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp)).background(MaterialTheme.colorScheme.primaryContainer).verticalScroll(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(10.dp))
+                .background(MaterialTheme.colorScheme.primaryContainer)
+                .verticalScroll(
                 rememberScrollState()
             ),
         ) {
