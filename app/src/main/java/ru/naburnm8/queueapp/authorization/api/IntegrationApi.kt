@@ -12,9 +12,9 @@ import java.util.UUID
 
 interface IntegrationApi {
 
-    @GET("/api/auth/integration/")
+    @GET("/api/auth/integration")
     suspend fun getAllIntegrations(): Response<List<IntegrationResponse>>
 
-    @POST("/api/auth/integration/{id}/register/")
+    @POST("/api/auth/integration/{id}/register")
     suspend fun registerWithIntegration(@Path("id") id: UUID, @Body req: RegisterStudentRequest): Response<UUID>
 }

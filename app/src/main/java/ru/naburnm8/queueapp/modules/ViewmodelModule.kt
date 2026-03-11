@@ -5,6 +5,7 @@ import org.koin.dsl.module
 import ru.naburnm8.queueapp.authorization.viewmodel.AuthorizationViewmodel
 import ru.naburnm8.queueapp.authorization.viewmodel.RegistrationViewmodel
 import ru.naburnm8.queueapp.navigaton.viewmodel.NavigationViewmodel
+import ru.naburnm8.queueapp.viewmodel.InterViewmodelBridge
 
 
 val viewmodelModule = module {
@@ -13,10 +14,14 @@ val viewmodelModule = module {
     }
 
     viewModel {
-        AuthorizationViewmodel(get(), get())
+        AuthorizationViewmodel(get(), get(), get())
     }
 
     viewModel {
-        RegistrationViewmodel(get(), get(), get())
+        RegistrationViewmodel(get(), get(), get(), get())
+    }
+
+    single {
+        InterViewmodelBridge()
     }
 }

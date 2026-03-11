@@ -1,5 +1,6 @@
 package ru.naburnm8.queueapp.authorization.ui.main
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -21,6 +22,7 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
@@ -54,7 +56,8 @@ import java.util.UUID
 fun StudentRegistrationScreen(
     modifier: Modifier = Modifier,
     onRegisterClick: (RegisterStudentEntity, UUID) -> Unit,
-    state: RegistrationState
+    state: RegistrationState,
+    onProceedToLoginClick: () -> Unit
 ) {
     var selectedItemId by remember {mutableStateOf(UUID(0,0))}
 
@@ -81,136 +84,164 @@ fun StudentRegistrationScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        if (state is RegistrationState.RegistrationSuccess) {
+            BackHandler() {
+                onProceedToLoginClick()
+            }
 
 
-        Text(
-            text = stringResource(R.string.register_as_student),
-            style = MaterialTheme.typography.headlineMedium
-        )
+            Text(
+                text = stringResource(R.string.registration_success),
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.onBackground
+            )
 
-        Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        IntegrationsDisplay(
-            state = state
-        ) {
-            selectedItemId = it.id
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text(stringResource(R.string.email)) },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            leadingIcon = {Icon(imageVector = Icons.Default.AccountCircle, contentDescription = "")},
-            isError = emailError,
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text(stringResource(R.string.password)) },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            visualTransformation = PasswordVisualTransformation(),
-            leadingIcon = {Icon(imageVector = Icons.Default.Lock, contentDescription = "")},
-            isError = passwordError
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        OutlinedTextField(
-            value = firstName,
-            onValueChange = { firstName = it },
-            label = { Text(stringResource(R.string.first_name)) },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            leadingIcon = {Icon(imageVector = Icons.Default.Face, contentDescription = "")},
-            isError = firstNameError
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        OutlinedTextField(
-            value = lastName,
-            onValueChange = { lastName = it },
-            label = { Text(stringResource(R.string.last_name)) },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            leadingIcon = {Icon(imageVector = Icons.Default.Face, contentDescription = "")},
-            isError = lastNameError
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        OutlinedTextField(
-            value = patronymic,
-            onValueChange = { patronymic = it },
-            label = { Text(stringResource(R.string.patronymic)) },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            leadingIcon = {Icon(imageVector = Icons.Default.Face, contentDescription = "")},
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        OutlinedTextField(
-            value = academicGroup,
-            onValueChange = { academicGroup = it },
-            label = { Text(stringResource(R.string.academic_group)) },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            leadingIcon = {Icon(imageVector = Icons.Default.Info, contentDescription = "")},
-            isError = academicGroupError
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        OutlinedTextField(
-            value = telegram,
-            onValueChange = { telegram = it },
-            label = { Text(stringResource(R.string.telegram)) },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            leadingIcon = {Icon(imageVector = Icons.Default.Info, contentDescription = "")},
-        )
-
-        SlideToConfirm(
-            text = stringResource(R.string.slide_to_confirm),
-            enabled = sliderActive
-        ) {
-            if (email == "") emailError = true
-            if (password == "") passwordError = true
-            if (firstName == "") firstNameError = true
-            if (lastName == "") lastNameError = true
-            if (academicGroup == "") academicGroupError = true
-
-            if (!emailError && !passwordError && !firstNameError && !lastNameError && !academicGroupError) {
-                sliderActive = false
-                emailError = false
-                passwordError = false
-                firstNameError = false
-                lastNameError = false
-                academicGroupError = false
-                onRegisterClick(
-                    RegisterStudentEntity(
-                        email = email,
-                        password = password,
-                        firstName = firstName,
-                        lastName = lastName,
-                        patronymic = patronymic,
-                        academicGroup = academicGroup,
-                        telegram = telegram,
-                        null
-                    ),
-                    selectedItemId
+            Button(
+                onClick = {
+                    onProceedToLoginClick()
+                }
+            ) {
+                Text(
+                    text = stringResource(R.string.proceed_to_login)
                 )
             }
+        } else {
+            Text(
+                text = stringResource(R.string.register_as_student),
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            IntegrationsDisplay(
+                state = state
+            ) {
+                selectedItemId = it.id
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            OutlinedTextField(
+                value = email,
+                onValueChange = { email = it },
+                label = { Text(stringResource(R.string.email)) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                leadingIcon = {Icon(imageVector = Icons.Default.AccountCircle, contentDescription = "")},
+                isError = emailError,
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text(stringResource(R.string.password)) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                visualTransformation = PasswordVisualTransformation(),
+                leadingIcon = {Icon(imageVector = Icons.Default.Lock, contentDescription = "")},
+                isError = passwordError
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            OutlinedTextField(
+                value = firstName,
+                onValueChange = { firstName = it },
+                label = { Text(stringResource(R.string.first_name)) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                leadingIcon = {Icon(imageVector = Icons.Default.Face, contentDescription = "")},
+                isError = firstNameError
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            OutlinedTextField(
+                value = lastName,
+                onValueChange = { lastName = it },
+                label = { Text(stringResource(R.string.last_name)) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                leadingIcon = {Icon(imageVector = Icons.Default.Face, contentDescription = "")},
+                isError = lastNameError
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            OutlinedTextField(
+                value = patronymic,
+                onValueChange = { patronymic = it },
+                label = { Text(stringResource(R.string.patronymic)) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                leadingIcon = {Icon(imageVector = Icons.Default.Face, contentDescription = "")},
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            OutlinedTextField(
+                value = academicGroup,
+                onValueChange = { academicGroup = it },
+                label = { Text(stringResource(R.string.academic_group)) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                leadingIcon = {Icon(imageVector = Icons.Default.Info, contentDescription = "")},
+                isError = academicGroupError
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            OutlinedTextField(
+                value = telegram,
+                onValueChange = { telegram = it },
+                label = { Text(stringResource(R.string.telegram)) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                leadingIcon = {Icon(imageVector = Icons.Default.Info, contentDescription = "")},
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            SlideToConfirm(
+                text = stringResource(R.string.slide_to_confirm),
+                enabled = sliderActive
+            ) {
+                if (email == "") emailError = true
+                if (password == "") passwordError = true
+                if (firstName == "") firstNameError = true
+                if (lastName == "") lastNameError = true
+                if (academicGroup == "") academicGroupError = true
+
+                if (!emailError && !passwordError && !firstNameError && !lastNameError && !academicGroupError) {
+                    sliderActive = false
+                    emailError = false
+                    passwordError = false
+                    firstNameError = false
+                    lastNameError = false
+                    academicGroupError = false
+                    onRegisterClick(
+                        RegisterStudentEntity(
+                            email = email,
+                            password = password,
+                            firstName = firstName,
+                            lastName = lastName,
+                            patronymic = patronymic,
+                            academicGroup = academicGroup,
+                            telegram = telegram,
+                            null
+                        ),
+                        selectedItemId
+                    )
+                }
+            }
         }
+
+
 
     }
 }
@@ -229,14 +260,15 @@ fun IntegrationsDisplay(
             .background(MaterialTheme.colorScheme.primaryContainer)
             .verticalScroll(rememberScrollState())
     ) {
-        when (state) {
+         when (state) {
             is RegistrationState.Loading -> {
-                CircularProgressIndicator()
+                CircularProgressIndicator(modifier = Modifier.fillMaxWidth())
             }
             is RegistrationState.Error -> {
                 Text(
                     text = stringResource(R.string.error_fetching_integrations),
-                    color = MaterialTheme.colorScheme.error
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.fillMaxWidth().padding(8.dp)
                 )
             }
             is RegistrationState.IntegrationsLoaded -> {
@@ -258,6 +290,9 @@ fun IntegrationsDisplay(
                         onElementClick(item)
                     }
                 }
+            }
+            else -> {
+
             }
         }
     }
@@ -308,7 +343,8 @@ private fun StudentRegistrationScreenPreview() {
                         payload = ""
                     )
                 )
-            )
+            ),
+            onProceedToLoginClick = {}
         )
     }
 }

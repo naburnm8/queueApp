@@ -24,7 +24,10 @@ import java.util.concurrent.TimeUnit
 
 private const val DEBUG_URL = "http://10.0.2.2:8081/"
 
-private val json = Json { ignoreUnknownKeys = true }
+private val json = Json {
+    ignoreUnknownKeys = true
+    coerceInputValues = true
+}
 
 val networkModule = module {
 

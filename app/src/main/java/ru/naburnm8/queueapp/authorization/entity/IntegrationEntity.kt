@@ -5,5 +5,5 @@ import java.util.UUID
 data class IntegrationEntity(
     val id: UUID,
     val name: String,
-    val payload: String
+    val payload: String?
 )

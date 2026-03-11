@@ -2,12 +2,14 @@ package ru.naburnm8.queueapp.authorization.viewmodel
 
 
 import android.util.Log
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import okio.IOException
+import ru.naburnm8.queueapp.R
 import ru.naburnm8.queueapp.authorization.SessionManager
 import ru.naburnm8.queueapp.authorization.entity.IntegrationEntity
 import ru.naburnm8.queueapp.authorization.entity.RegisterStudentEntity
@@ -16,17 +18,31 @@ import ru.naburnm8.queueapp.authorization.navigation.AuthorizationMainNavigation
 import ru.naburnm8.queueapp.authorization.repository.AuthorizationRepository
 import ru.naburnm8.queueapp.authorization.repository.IntegrationRepository
 import ru.naburnm8.queueapp.authorization.request.LoginRequest
+import ru.naburnm8.queueapp.viewmodel.InterViewmodelBridge
+import ru.naburnm8.queueapp.viewmodel.Method
 
 
 class AuthorizationViewmodel (
     private val sessionManager: SessionManager,
     private val repository: AuthorizationRepository,
+    private val bridge: InterViewmodelBridge
 ) : ViewModel() {
     private var _stateFlow = MutableStateFlow<AuthorizationState>(AuthorizationState.Main(
         AuthorizationMainNavigation.LOGIN))
 
     val stateFlow = _stateFlow.asStateFlow()
 
+    init {
+        viewModelScope.launch {
+            bridge.messageFlow.collect {
+                if (it.recipientId == AuthorizationViewmodel::class.java.toString()) {
+                    if (it.method == Method.ERROR.name && it.senderId == RegistrationViewmodel::class.java.toString()) {
+                        _stateFlow.value = AuthorizationState.Error("Registration failed")
+                    }
+                }
+            }
+        }
+    }
     fun changeMainFlowState(state: AuthorizationMainNavigation) {
         _stateFlow.value = AuthorizationState.Main(state)
     }

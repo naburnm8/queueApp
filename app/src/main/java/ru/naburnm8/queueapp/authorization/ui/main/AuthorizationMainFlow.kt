@@ -61,10 +61,12 @@ fun AuthorizationMainFlow(
                 modifier = modifier.fillMaxSize(),
                 onStudentRegistrationClick = {
                     vm.changeMainFlowState(AuthorizationMainNavigation.STUDENT_REGISTRATION)
+                    registrationVm.fetchAllIntegrations()
                     navController.navigate(AuthorizationMainNavigation.STUDENT_REGISTRATION.name)
                 },
                 onTeacherRegistrationClick = {
                     vm.changeMainFlowState(AuthorizationMainNavigation.TEACHER_REGISTRATION)
+                    registrationVm.fetchAllIntegrations()
                     navController.navigate(AuthorizationMainNavigation.TEACHER_REGISTRATION.name)
                 }
             )
@@ -76,14 +78,21 @@ fun AuthorizationMainFlow(
             popEnterTransition = { slideInHorizontally(initialOffsetX = { -it }) },
             popExitTransition = { slideOutHorizontally(targetOffsetX = { it }) }
         ) {
-            registrationVm.fetchAllIntegrations()
-
             val registrationState = registrationVm.integrationsStateFlow.collectAsState()
 
             StudentRegistrationScreen(
                 modifier = Modifier.fillMaxSize(),
                 onRegisterClick = {req, int -> registrationVm.tryRegisterStudent(req, int)},
-                registrationState.value
+                registrationState.value,
+                onProceedToLoginClick = {
+                    registrationVm.clearAfterRegistration()
+                    vm.changeMainFlowState(AuthorizationMainNavigation.LOGIN)
+                    navController.navigate(AuthorizationMainNavigation.LOGIN.name) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true
+                        }
+                    }
+                }
             )
 
         }
