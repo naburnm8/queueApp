@@ -20,6 +20,7 @@ import ru.naburnm8.queueapp.authorization.token.TokenRefresher
 import ru.naburnm8.queueapp.authorization.token.TokenRefresherImpl
 import ru.naburnm8.queueapp.authorization.token.TokenStorage
 import ru.naburnm8.queueapp.authorization.token.TokenStorageImpl
+import ru.naburnm8.queueapp.profile.api.ProfileApi
 import java.util.concurrent.TimeUnit
 
 private const val DEBUG_URL = "http://10.0.2.2:8081/"
@@ -112,6 +113,10 @@ val networkModule = module {
             .client(get<OkHttpClient>(named("main_okhttp")))
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
             .build()
+    }
+
+    single<ProfileApi> {
+        get<Retrofit>(named("main_retrofit")).create(ProfileApi::class.java)
     }
 
 }
