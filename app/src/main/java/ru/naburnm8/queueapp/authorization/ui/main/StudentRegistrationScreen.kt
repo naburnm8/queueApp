@@ -211,6 +211,13 @@ fun StudentRegistrationScreen(
                 text = stringResource(R.string.slide_to_confirm),
                 enabled = sliderActive
             ) {
+                sliderActive = false
+                emailError = false
+                passwordError = false
+                firstNameError = false
+                lastNameError = false
+                academicGroupError = false
+
                 if (email == "") emailError = true
                 if (password == "") passwordError = true
                 if (firstName == "") firstNameError = true
@@ -218,12 +225,6 @@ fun StudentRegistrationScreen(
                 if (academicGroup == "") academicGroupError = true
 
                 if (!emailError && !passwordError && !firstNameError && !lastNameError && !academicGroupError) {
-                    sliderActive = false
-                    emailError = false
-                    passwordError = false
-                    firstNameError = false
-                    lastNameError = false
-                    academicGroupError = false
                     onRegisterClick(
                         RegisterStudentEntity(
                             email = email,

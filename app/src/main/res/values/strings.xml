@@ -20,6 +20,7 @@
     <string name="last_name">Last name</string>
     <string name="patronymic">Patronymic</string>
     <string name="academic_group">Academic group</string>
+    <string name="department">Department</string>
     <string name="telegram">Telegram tag</string>
     <string name="slide_to_confirm">Slide to confirm</string>
     <string name="registration_success">Registration success!</string>
@@ -27,4 +28,5 @@
     <string name="registration_failed">Registration failed</string>
     <string name="teacher_registration">Teacher registration</string>
     <string name="teacher_integration_notice">Sorry, teacher accounts can\'t be registered without an integration. Please contact staff.</string>
+    <string name="edit_profile">Edit profile</string>
 </resources>

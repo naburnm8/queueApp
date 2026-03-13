@@ -122,7 +122,23 @@ fun LoginScreen(
 @Preview
 @Composable
 private fun LoginScreenPreview() {
-    QueueAppTheme() {
+    QueueAppTheme(
+
+    ) {
+        LoginScreen(
+            modifier = Modifier.fillMaxSize(),
+            onLoginClick = { _, _ -> },
+            onRegistrationClick = { }
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun LoginScreenPreviewDark() {
+    QueueAppTheme(
+        darkTheme = true
+    ) {
         LoginScreen(
             modifier = Modifier.fillMaxSize(),
             onLoginClick = { _, _ -> },
