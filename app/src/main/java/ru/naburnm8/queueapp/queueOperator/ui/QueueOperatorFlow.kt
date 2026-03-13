@@ -16,6 +16,7 @@ import org.koin.androidx.compose.koinViewModel
 import ru.naburnm8.queueapp.navigaton.ui.QueueOperatorNavigationBar
 import ru.naburnm8.queueapp.navigaton.viewmodel.NavigationState
 import ru.naburnm8.queueapp.navigaton.viewmodel.NavigationViewmodel
+import ru.naburnm8.queueapp.queueOperator.profile.ui.profileFlow
 import ru.naburnm8.queueapp.queueOperator.navigation.QueueOperatorFlowNavigation
 
 @Composable
@@ -42,9 +43,7 @@ fun QueueOperatorFlow(
             composable(QueueOperatorFlowNavigation.Settings.name) {
                 Text("Settings Screen")
             }
-            composable(QueueOperatorFlowNavigation.Profile.name) {
-                Text("Profile Screen")
-            }
+            profileFlow(navController)
         }
     }
 

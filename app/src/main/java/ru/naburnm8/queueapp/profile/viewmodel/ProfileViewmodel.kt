@@ -21,72 +21,72 @@ import ru.naburnm8.queueapp.profile.repository.ProfileRepository
 class ProfileViewmodel(
     private val profileRepository: ProfileRepository,
     private val sessionManager: SessionManager,
-    private val authorizationRepository: AuthorizationRepository,
     private val sessionRepository: SessionRepository,
-    private val tokenStorage: TokenStorage
 
 ) : ViewModel() {
 
     private val _stateFlow = MutableStateFlow<ProfileState>(ProfileState.Loading)
     val stateFlow = _stateFlow.asStateFlow()
 
-    fun loadMyProfile() {
+    init {
         viewModelScope.launch {
-            _stateFlow.value = ProfileState.Loading
-            runCatching {
-                val sessionState = sessionRepository.resolveSession()
-
-                when (sessionState) {
-                    is SessionState.Student -> {
-                        val resultResponse = profileRepository.getMeStudent()
-                        if (resultResponse.isFailure) throw IOException("Request failed")
-
-                        val result = resultResponse.getOrNull() ?: throw IllegalStateException("Body is null")
-                        val entity = ProfileMapper.map(result)
-                        _stateFlow.value = ProfileState.Ready(entity, ProfileNavigation.MAIN)
-                    }
-                    is SessionState.Teacher -> {
-                        val resultResponse = profileRepository.getMeTeacher()
-                        if (resultResponse.isFailure) throw IOException("Request failed")
-
-                        val result = resultResponse.getOrNull() ?: throw IllegalStateException("Body is null")
-                        val entity = ProfileMapper.map(result)
-                        _stateFlow.value = ProfileState.Ready(entity, ProfileNavigation.MAIN)
-                    }
-                    else -> {
-                        throw IllegalStateException("Unauthorized")
-                    }
-                }
-            }.onFailure {
-                _stateFlow.value = ProfileState.Error(it.message ?: "")
-            }
-
+            loadMyProfile()
         }
     }
 
-    fun updateProfile(entity: UpdateProfileEntity) {
+    fun changeLoadedRoute(route: ProfileNavigation) {
+        if (_stateFlow.value !is ProfileState.Ready) return
+        val currentProfile = (_stateFlow.value as ProfileState.Ready).profile
+        _stateFlow.value = ProfileState.Ready(currentProfile, route)
+    }
+
+    private suspend fun loadMyProfileInternal(){
+        _stateFlow.value = ProfileState.Loading
+        runCatching {
+            val sessionState = sessionRepository.resolveSession()
+
+            when (sessionState) {
+                is SessionState.Student -> {
+                    val resultResponse = profileRepository.getMeStudent()
+                    if (resultResponse.isFailure) throw IOException("Request failed")
+
+                    val result = resultResponse.getOrNull() ?: throw IllegalStateException("Body is null")
+                    val entity = ProfileMapper.map(result)
+                    _stateFlow.value = ProfileState.Ready(entity, ProfileNavigation.MAIN)
+                }
+                is SessionState.Teacher -> {
+                    val resultResponse = profileRepository.getMeTeacher()
+                    if (resultResponse.isFailure) throw IOException("Request failed")
+
+                    val result = resultResponse.getOrNull() ?: throw IllegalStateException("Body is null")
+                    val entity = ProfileMapper.map(result)
+                    _stateFlow.value = ProfileState.Ready(entity, ProfileNavigation.MAIN)
+                }
+                else -> {
+                    throw IllegalStateException("Unauthorized")
+                }
+            }
+        }.onFailure {
+            _stateFlow.value = ProfileState.Error(it.message ?: "")
+        }
+    }
+
+    fun loadMyProfile() {
+        viewModelScope.launch {
+            loadMyProfileInternal()
+        }
+    }
+
+    fun updateProfile(entity: UpdateProfileEntity, onSuccess: () -> Unit) {
         if (_stateFlow.value !is ProfileState.Ready) return
         viewModelScope.launch {
             _stateFlow.value = ProfileState.Loading
             runCatching {
                 val updatedResponse = profileRepository.updateMe(ProfileMapper.toRequest(entity))
                 if (updatedResponse.isFailure) throw IOException("Request failed")
-                val updatedDto =  updatedResponse.getOrNull() ?: throw IllegalStateException("Body is null")
-                val updated = ProfileMapper.map(updatedDto)
-
-                val state = _stateFlow.value as ProfileState.Ready
-
-                val newProfile = ProfileEntity(
-                    id = state.profile.id,
-                    firstName = updated.firstName,
-                    lastName = updated.lastName,
-                    patronymic = updated.patronymic,
-                    telegram = updated.telegram,
-                    multifield = updated.multifield,
-                    multifieldType = updated.multifieldType,
-                    avatarUrl = updated.avatarUrl
-                )
-                _stateFlow.value = ProfileState.Ready(newProfile, ProfileNavigation.MAIN)
+                updatedResponse.getOrNull() ?: throw IllegalStateException("Body is null")
+                loadMyProfileInternal()
+                onSuccess()
             }.onFailure {
                 _stateFlow.value = ProfileState.Error(it.message ?: "Unknown error")
             }
@@ -96,23 +96,12 @@ class ProfileViewmodel(
 
     fun logout() {
         viewModelScope.launch {
-            _stateFlow.value = ProfileState.Loading
-            runCatching {
-                val refreshToken = tokenStorage.getRefreshToken() ?: throw IllegalStateException("Unauthorized")
-
-                val result = authorizationRepository.logout(
-                    LogoutRequest(refreshToken)
-                )
-
-                if (result.isSuccess) {
-                    sessionManager.logout()
-                } else {
-                    throw IllegalStateException("Failed logout")
-                }
-            }.onFailure {
-                _stateFlow.value = ProfileState.Error(it.message ?: "")
-            }
+            sessionManager.logout()
         }
+    }
+
+    fun resetScreen() {
+        loadMyProfile()
     }
 
 }

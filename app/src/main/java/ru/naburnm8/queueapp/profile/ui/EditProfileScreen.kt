@@ -16,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,31 +26,73 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import org.koin.androidx.compose.koinViewModel
 import ru.naburnm8.queueapp.R
 import ru.naburnm8.queueapp.authorization.ui.main.SlideToConfirm
 import ru.naburnm8.queueapp.profile.entity.ProfileEntity
 import ru.naburnm8.queueapp.profile.entity.ProfileMultifieldType
 import ru.naburnm8.queueapp.profile.entity.UpdateProfileEntity
+import ru.naburnm8.queueapp.profile.viewmodel.ProfileState
+import ru.naburnm8.queueapp.profile.viewmodel.ProfileViewmodel
+import ru.naburnm8.queueapp.ui.screen.GenericErrorScreen
+import ru.naburnm8.queueapp.ui.screen.GenericLoadingScreen
 import ru.naburnm8.queueapp.ui.theme.QueueAppTheme
 import java.util.UUID
+
 
 @Composable
 fun EditProfileScreen(
     modifier: Modifier = Modifier,
+    profileVm: ProfileViewmodel,
+    onEditClick: () -> Unit
+) {
+    val state = profileVm.stateFlow.collectAsState()
+
+    when (state.value) {
+        is ProfileState.Loading -> {
+            GenericLoadingScreen(
+                modifier
+            )
+        }
+        is ProfileState.Error -> {
+            GenericErrorScreen(
+                modifier = modifier,
+                errorMessage = (state.value as ProfileState.Error).message
+            ) {
+                profileVm.resetScreen()
+            }
+        }
+        is ProfileState.Ready -> {
+            EditProfileComponent(
+                modifier = modifier,
+                profile = (state.value as ProfileState.Ready).profile
+            ) {
+                profileVm.updateProfile(it){
+                    onEditClick()
+                }
+            }
+        }
+    }
+}
+
+
+@Composable
+private fun EditProfileComponent(
+    modifier: Modifier = Modifier,
     profile: ProfileEntity,
     onConfirmClick: (UpdateProfileEntity) -> Unit,
 ) {
-    var firstName by remember { mutableStateOf("") }
-    var lastName by remember { mutableStateOf("") }
-    var patronymic by remember { mutableStateOf("") }
-    var multifield by remember { mutableStateOf("") }
-    var telegram by remember { mutableStateOf("") }
+    var firstName by remember(profile) { mutableStateOf(profile.firstName) }
+    var lastName by remember(profile) { mutableStateOf(profile.lastName) }
+    var patronymic by remember(profile) { mutableStateOf(profile.patronymic ?: "") }
+    var multifield by remember(profile) { mutableStateOf(profile.multifield) }
+    var telegram by remember(profile) { mutableStateOf(profile.telegram ?: "") }
 
-    var firstNameError by remember {mutableStateOf(false)}
-    var lastNameError by remember {mutableStateOf(false)}
-    var multifieldError by remember {mutableStateOf(false)}
+    var firstNameError by remember(profile) {mutableStateOf(false)}
+    var lastNameError by remember(profile) {mutableStateOf(false)}
+    var multifieldError by remember(profile) {mutableStateOf(false)}
 
-    var sliderActive by remember {mutableStateOf(true)}
+    var sliderActive by remember(profile) {mutableStateOf(true)}
 
     Column(
         modifier = modifier
@@ -162,9 +205,9 @@ fun EditProfileScreen(
 
 @Preview
 @Composable
-fun EditProfileScreenPreview() {
+private fun EditProfileScreenPreview() {
     QueueAppTheme() {
-        EditProfileScreen(
+        EditProfileComponent(
             profile = ProfileEntity(
                 id = UUID(0, 0),
                 firstName = "Артем",
@@ -182,11 +225,11 @@ fun EditProfileScreenPreview() {
 }
 @Preview
 @Composable
-fun EditProfileScreenPreviewDark() {
+private fun EditProfileScreenPreviewDark() {
     QueueAppTheme(
         darkTheme = true
     ) {
-        EditProfileScreen(
+        EditProfileComponent(
             profile = ProfileEntity(
                 id = UUID(0, 0),
                 firstName = "Артем",

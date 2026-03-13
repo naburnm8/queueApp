@@ -17,6 +17,7 @@ import ru.naburnm8.queueapp.navigaton.ui.QueueConsumerNavigationBar
 import ru.naburnm8.queueapp.navigaton.viewmodel.NavigationState
 import ru.naburnm8.queueapp.navigaton.viewmodel.NavigationViewmodel
 import ru.naburnm8.queueapp.queueConsumer.navigation.QueueConsumerFlowNavigation
+import ru.naburnm8.queueapp.queueConsumer.profile.ui.profileFlow
 
 @Composable
 fun QueueConsumerFlow(
@@ -43,9 +44,8 @@ fun QueueConsumerFlow(
             composable(QueueConsumerFlowNavigation.MyRequests.name) {
                 Text("My Requests Screen")
             }
-            composable(QueueConsumerFlowNavigation.MyProfile.name) {
-                Text("My Profile Screen")
-            }
+
+            profileFlow(navController)
         }
     }
 

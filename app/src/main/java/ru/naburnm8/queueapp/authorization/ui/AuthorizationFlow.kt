@@ -1,5 +1,6 @@
 package ru.naburnm8.queueapp.authorization.ui
 
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -13,6 +14,8 @@ import ru.naburnm8.queueapp.navigaton.viewmodel.NavigationViewmodel
 import ru.naburnm8.queueapp.ui.screen.GenericErrorScreen
 import ru.naburnm8.queueapp.ui.screen.GenericLoadingScreen
 
+private const val TAG = "AuthorizationFlow"
+
 @Composable
 fun AuthorizationFlow(
     navigationViewmodel: NavigationViewmodel = koinViewModel(),
@@ -24,9 +27,11 @@ fun AuthorizationFlow(
     when (state.value) {
 
         is AuthorizationState.Main -> {
+            Log.d(TAG, "AuthorizationFlow: Main")
             AuthorizationMainFlow()
         }
         is AuthorizationState.Error -> {
+            Log.d(TAG, "AuthorizationFlow: Error")
             GenericErrorScreen(
                 modifier = Modifier.fillMaxSize(),
                 errorMessage = (state.value as AuthorizationState.Error).message
@@ -35,6 +40,7 @@ fun AuthorizationFlow(
             }
         }
         is AuthorizationState.Loading -> {
+            Log.d(TAG, "AuthorizationFlow: Loading")
             GenericLoadingScreen(
                 modifier = Modifier.fillMaxSize(),
             )

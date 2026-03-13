@@ -42,6 +42,12 @@ class AuthorizationViewmodel (
                 }
             }
         }
+
+        viewModelScope.launch {
+            sessionManager.logoutFlow.collect {
+                _stateFlow.value = AuthorizationState.Main(AuthorizationMainNavigation.LOGIN)
+            }
+        }
     }
     fun changeMainFlowState(state: AuthorizationMainNavigation) {
         _stateFlow.value = AuthorizationState.Main(state)
