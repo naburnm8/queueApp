@@ -7,20 +7,32 @@ import ru.naburnm8.queueapp.authorization.viewmodel.AuthorizationViewmodel
 import ru.naburnm8.queueapp.authorization.viewmodel.RegistrationViewmodel
 import ru.naburnm8.queueapp.navigaton.viewmodel.NavigationViewmodel
 import ru.naburnm8.queueapp.profile.viewmodel.ProfileViewmodel
+import ru.naburnm8.queueapp.queueOperator.discipline.viewmodel.DisciplineViewmodel
 import ru.naburnm8.queueapp.viewmodel.InterViewmodelBridge
 
 
 val viewmodelModule = module {
     viewModel{
-        NavigationViewmodel(get(), get())
+        NavigationViewmodel(
+            get(),
+            get()
+        )
     }
 
     viewModel {
-        AuthorizationViewmodel(get(), get(), get())
+        AuthorizationViewmodel(get(),
+            get(),
+            get()
+        )
     }
 
     viewModel {
-        RegistrationViewmodel(get(), get(), get(), get())
+        RegistrationViewmodel(
+            get(),
+            get(),
+            get(),
+            get()
+        )
     }
 
     single {
@@ -36,6 +48,12 @@ val viewmodelModule = module {
             get(),
             get(),
             get(),
+        )
+    }
+
+    viewModel {
+        DisciplineViewmodel(
+            get()
         )
     }
 }

@@ -42,4 +42,48 @@ class ProfileRepository (
         }
         return Result.success(response.body()!!)
     }
+
+    suspend fun getAllDistinctGroups() : Result<List<String>> {
+        val response = profileApi.getAllDistinctGroups()
+        if (!response.isSuccessful) {
+            return Result.failure(IOException("${response.code()}, ${response.errorBody()}"))
+        }
+        if (response.body() == null) {
+            return Result.failure(IllegalStateException("Body is null"))
+        }
+        return Result.success(response.body()!!)
+    }
+
+    suspend fun getAllDistinctDepartments() : Result<List<String>> {
+        val response = profileApi.getAllDistinctDepartments()
+        if (!response.isSuccessful) {
+            return Result.failure(IOException("${response.code()}, ${response.errorBody()}"))
+        }
+        if (response.body() == null) {
+            return Result.failure(IllegalStateException("Body is null"))
+        }
+        return Result.success(response.body()!!)
+    }
+
+    suspend fun getAllOrByDepartmentTeachers(department: String?) : Result<List<TeacherResponse>> {
+        val response = profileApi.getAllOrByDepartmentTeachers(department)
+        if (!response.isSuccessful) {
+            return Result.failure(IOException("${response.code()}, ${response.errorBody()}"))
+        }
+        if (response.body() == null) {
+            return Result.failure(IllegalStateException("Body is null"))
+        }
+        return Result.success(response.body()!!)
+    }
+
+    suspend fun getAllOrByGroupStudents(group: String?) : Result<List<StudentResponse>> {
+        val response = profileApi.getAllOrByGroupStudents(group)
+        if (!response.isSuccessful) {
+            return Result.failure(IOException("${response.code()}, ${response.errorBody()}"))
+        }
+        if (response.body() == null) {
+            return Result.failure(IllegalStateException("Body is null"))
+        }
+        return Result.success(response.body()!!)
+    }
 }

@@ -1,7 +1,7 @@
 package ru.naburnm8.queueapp.profile.response
 
 import kotlinx.serialization.Serializable
-import ru.naburnm8.queueapp.authorization.serialization.UUIDSerializer
+import ru.naburnm8.queueapp.serialization.UUIDSerializer
 import java.util.UUID
 
 @Serializable

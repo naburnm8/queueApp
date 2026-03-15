@@ -1,4 +1,4 @@
-package ru.naburnm8.queueapp.authorization.serialization
+package ru.naburnm8.queueapp.serialization
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind
