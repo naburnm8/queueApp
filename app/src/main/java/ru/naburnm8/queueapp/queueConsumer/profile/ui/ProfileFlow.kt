@@ -13,15 +13,16 @@ import ru.naburnm8.queueapp.profile.ui.EditProfileScreen
 import ru.naburnm8.queueapp.profile.ui.ProfileScreen
 import ru.naburnm8.queueapp.profile.viewmodel.ProfileViewmodel
 import ru.naburnm8.queueapp.queueConsumer.navigation.QueueConsumerFlowNavigation
+import ru.naburnm8.queueapp.queueConsumer.profile.navigation.TeacherProfileNavigation
 
 fun NavGraphBuilder.profileFlow(
     navController: NavHostController,
 ) {
     navigation(
         route = QueueConsumerFlowNavigation.MyProfile.name,
-        startDestination = ProfileNavigation.MAIN.name
+        startDestination = TeacherProfileNavigation.ViewProfileTeacher.name
     ) {
-        composable(ProfileNavigation.MAIN.name) {
+        composable(TeacherProfileNavigation.ViewProfileTeacher.name) {
             val parentEntry = remember(it) {
                 navController.getBackStackEntry(QueueConsumerFlowNavigation.MyProfile.name)
             }
@@ -29,11 +30,11 @@ fun NavGraphBuilder.profileFlow(
             val profileVm: ProfileViewmodel = koinViewModel(viewModelStoreOwner = parentEntry)
 
             ProfileScreen(modifier = Modifier.fillMaxSize(), profileVm = profileVm) {
-                navController.navigate(ProfileNavigation.EDIT.name)
+                navController.navigate(TeacherProfileNavigation.EditProfileTeacher.name)
             }
         }
 
-        composable (ProfileNavigation.EDIT.name) {
+        composable (TeacherProfileNavigation.EditProfileTeacher.name) {
             val parentEntry = remember(it) {
                 navController.getBackStackEntry(QueueConsumerFlowNavigation.MyProfile.name)
             }

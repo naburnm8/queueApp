@@ -8,6 +8,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,6 +19,8 @@ import ru.naburnm8.queueapp.navigaton.viewmodel.NavigationState
 import ru.naburnm8.queueapp.navigaton.viewmodel.NavigationViewmodel
 import ru.naburnm8.queueapp.queueConsumer.navigation.QueueConsumerFlowNavigation
 import ru.naburnm8.queueapp.queueConsumer.profile.ui.profileFlow
+import ru.naburnm8.queueapp.queueConsumer.queue.ui.queueFlow
+import ru.naburnm8.queueapp.queueConsumer.submissionRequests.ui.submissionRequestsFlow
 
 @Composable
 fun QueueConsumerFlow(
@@ -38,12 +41,9 @@ fun QueueConsumerFlow(
             startDestination = QueueConsumerFlowNavigation.MyQueue.name,
             modifier = Modifier.padding(ip)
         ) {
-            composable(QueueConsumerFlowNavigation.MyQueue.name) {
-                Text("My Queue Screen")
-            }
-            composable(QueueConsumerFlowNavigation.MyRequests.name) {
-                Text("My Requests Screen")
-            }
+            queueFlow(navController)
+
+            submissionRequestsFlow(navController)
 
             profileFlow(navController)
         }
@@ -51,14 +51,19 @@ fun QueueConsumerFlow(
 
     LaunchedEffect(state) {
         val target = (state as NavigationState.QueueConsumer).route.name
-        val current = navController.currentDestination?.route
+        val currentDestination = navController.currentBackStackEntry?.destination
 
-        if (current != target) {
+        val alreadyOnTarget = currentDestination
+            ?.hierarchy
+            ?.any { it.route == target } == true
+
+        if (!alreadyOnTarget) {
             navController.navigate(target) {
                 launchSingleTop = true
                 restoreState = true
                 popUpTo(navController.graph.findStartDestination().id) {
                     saveState = true
+                    inclusive = true
                 }
             }
         }

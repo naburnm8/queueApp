@@ -105,9 +105,7 @@ class DisciplineViewmodel (
         return listOf() // Unreachable, but compiler requires it
     }
 
-    private suspend fun switchActiveDisciplineInner(discipline: DisciplineEntity) {
-        val previousState = _stateFlow.value
-        if (previousState !is DisciplineState.Main) return
+    private suspend fun reloadActiveDiscipline(discipline: DisciplineEntity, previousState: DisciplineState.Main) {
         _stateFlow.value = DisciplineState.Loading
         runCatching {
             val workTypes = loadWorkTypes(discipline.id)
@@ -123,6 +121,12 @@ class DisciplineViewmodel (
         }.onFailure {
             _stateFlow.value = DisciplineState.Error(it.message ?: "Unknown error")
         }
+    }
+
+    private suspend fun switchActiveDisciplineInner(discipline: DisciplineEntity) {
+        val previousState = _stateFlow.value
+        if (previousState !is DisciplineState.Main) return
+        reloadActiveDiscipline(discipline, previousState)
     }
 
     fun switchActiveDiscipline(discipline: DisciplineEntity) {
@@ -145,7 +149,7 @@ class DisciplineViewmodel (
                     )
                 )
                 if (result.isFailure) throw result.exceptionOrNull() ?: IOException("Unknown error")
-                switchActiveDisciplineInner(previousState.activeDiscipline.discipline)
+                reloadActiveDiscipline(discipline = previousState.activeDiscipline.discipline, previousState = previousState)
                 onSuccess()
             }.onFailure {
                 _stateFlow.value = DisciplineState.Error(it.message ?: "Unknown error")
@@ -178,7 +182,7 @@ class DisciplineViewmodel (
             runCatching {
                 val result = repository.deleteWorkTypes(DeleteRequest(workTypeIds))
                 if (result.isFailure) throw result.exceptionOrNull() ?: IOException("Unknown error")
-                switchActiveDisciplineInner(previousState.activeDiscipline.discipline)
+                reloadActiveDiscipline(previousState.activeDiscipline.discipline, previousState)
                 onSuccess()
             }.onFailure {
                 _stateFlow.value = DisciplineState.Error(it.message ?: "Unknown error")

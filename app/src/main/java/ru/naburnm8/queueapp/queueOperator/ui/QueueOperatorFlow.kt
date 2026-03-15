@@ -2,22 +2,24 @@ package ru.naburnm8.queueapp.queueOperator.ui
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import org.koin.androidx.compose.koinViewModel
 import ru.naburnm8.queueapp.navigaton.ui.QueueOperatorNavigationBar
 import ru.naburnm8.queueapp.navigaton.viewmodel.NavigationState
 import ru.naburnm8.queueapp.navigaton.viewmodel.NavigationViewmodel
+import ru.naburnm8.queueapp.queueOperator.discipline.ui.disciplinesFlow
+import ru.naburnm8.queueapp.queueOperator.metrics.ui.studentMetricsFlow
 import ru.naburnm8.queueapp.queueOperator.profile.ui.profileFlow
 import ru.naburnm8.queueapp.queueOperator.navigation.QueueOperatorFlowNavigation
+import ru.naburnm8.queueapp.queueOperator.queues.ui.queuesFlow
 
 @Composable
 fun QueueOperatorFlow(
@@ -37,26 +39,31 @@ fun QueueOperatorFlow(
             startDestination = QueueOperatorFlowNavigation.MyQueues.name,
             modifier = Modifier.padding(ip)
         ) {
-            composable(QueueOperatorFlowNavigation.MyQueues.name) {
-                Text("My Queues Screen")
-            }
-            composable(QueueOperatorFlowNavigation.Settings.name) {
-                Text("Settings Screen")
-            }
+            queuesFlow(navController)
+
+            disciplinesFlow(navController)
+
             profileFlow(navController)
+
+            studentMetricsFlow(navController)
         }
     }
 
     LaunchedEffect(state) {
         val target = (state as NavigationState.QueueOperator).route.name
-        val current = navController.currentDestination?.route
+        val currentDestination = navController.currentBackStackEntry?.destination
 
-        if (current != target) {
+        val alreadyOnTarget = currentDestination
+            ?.hierarchy
+            ?.any { it.route == target } == true
+
+        if (!alreadyOnTarget) {
             navController.navigate(target) {
                 launchSingleTop = true
                 restoreState = true
                 popUpTo(navController.graph.findStartDestination().id) {
                     saveState = true
+                    inclusive = true
                 }
             }
         }

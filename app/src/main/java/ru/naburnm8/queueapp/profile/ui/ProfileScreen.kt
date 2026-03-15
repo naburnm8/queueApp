@@ -6,7 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.koin.androidx.compose.koinViewModel
 import ru.naburnm8.queueapp.profile.navigation.ProfileNavigation
 import ru.naburnm8.queueapp.profile.viewmodel.ProfileState
 import ru.naburnm8.queueapp.profile.viewmodel.ProfileViewmodel
@@ -45,7 +44,7 @@ fun ProfileScreen(
                     modifier = Modifier,
                     profile = (state.value as ProfileState.Ready).profile,
                     onEditClick = {
-                        profileVm.changeLoadedRoute(ProfileNavigation.EDIT)
+                        profileVm.changeLoadedRoute(ProfileNavigation.EditProfile)
                         onEditClick()
                     },
                     onLogoutClick = {

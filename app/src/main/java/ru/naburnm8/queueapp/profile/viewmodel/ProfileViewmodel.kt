@@ -6,13 +6,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import okio.IOException
-import ru.naburnm8.queueapp.authorization.repository.AuthorizationRepository
-import ru.naburnm8.queueapp.authorization.request.LogoutRequest
 import ru.naburnm8.queueapp.authorization.session.SessionManager
 import ru.naburnm8.queueapp.authorization.session.SessionRepository
 import ru.naburnm8.queueapp.authorization.session.SessionState
-import ru.naburnm8.queueapp.authorization.token.TokenStorage
-import ru.naburnm8.queueapp.profile.entity.ProfileEntity
 import ru.naburnm8.queueapp.profile.entity.ProfileMapper
 import ru.naburnm8.queueapp.profile.entity.UpdateProfileEntity
 import ru.naburnm8.queueapp.profile.navigation.ProfileNavigation
@@ -52,7 +48,7 @@ class ProfileViewmodel(
 
                     val result = resultResponse.getOrNull() ?: throw IllegalStateException("Body is null")
                     val entity = ProfileMapper.map(result)
-                    _stateFlow.value = ProfileState.Ready(entity, ProfileNavigation.MAIN)
+                    _stateFlow.value = ProfileState.Ready(entity, ProfileNavigation.ViewProfile)
                 }
                 is SessionState.Teacher -> {
                     val resultResponse = profileRepository.getMeTeacher()
@@ -60,7 +56,7 @@ class ProfileViewmodel(
 
                     val result = resultResponse.getOrNull() ?: throw IllegalStateException("Body is null")
                     val entity = ProfileMapper.map(result)
-                    _stateFlow.value = ProfileState.Ready(entity, ProfileNavigation.MAIN)
+                    _stateFlow.value = ProfileState.Ready(entity, ProfileNavigation.ViewProfile)
                 }
                 else -> {
                     throw IllegalStateException("Unauthorized")

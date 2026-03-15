@@ -9,9 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.clickable
 import androidx.compose.material3.Icon
@@ -35,7 +32,6 @@ import ru.naburnm8.queueapp.R
 import ru.naburnm8.queueapp.navigaton.viewmodel.NavigationState
 import ru.naburnm8.queueapp.navigaton.viewmodel.NavigationViewmodel
 import ru.naburnm8.queueapp.queueConsumer.navigation.QueueConsumerFlowNavigation
-import ru.naburnm8.queueapp.queueConsumer.ui.QueueConsumerFlow
 import ru.naburnm8.queueapp.queueOperator.navigation.QueueOperatorFlowNavigation
 import ru.naburnm8.queueapp.ui.theme.QueueAppTheme
 
@@ -92,7 +88,14 @@ fun QueueOperatorNavigationBar(
             onClick = {}
         ),
         NavigationButtonConfig(
-            state = NavigationState.QueueOperator(QueueOperatorFlowNavigation.Settings),
+            state = NavigationState.QueueOperator(QueueOperatorFlowNavigation.Metrics),
+            painter = painterResource(R.drawable.star),
+            contentDescription = stringResource(R.string.metrics),
+            onClick = {}
+        ),
+
+        NavigationButtonConfig(
+            state = NavigationState.QueueOperator(QueueOperatorFlowNavigation.Disciplines),
             painter = painterResource(R.drawable.settings),
             contentDescription = stringResource(R.string.settings),
             onClick = {}
@@ -154,15 +157,15 @@ private fun NavigationButton(
         modifier = modifier
             .padding(4.dp)
             .shadow(
-                elevation = if (isSelected) 5.dp else 20.dp,
+                elevation = if (isSelected) 1.dp else 5.dp,
                 clip = true,
                 shape = RoundedCornerShape(10.dp),
                 spotColor = mainColor,
                 ambientColor = mainColor
             )
             .background(MaterialTheme.colorScheme.primaryContainer)
-            .height(60.dp)
-            .width(60.dp)
+            .height(72.dp)
+            .width(72.dp)
             .clickable(onClick = onClick),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -172,8 +175,14 @@ private fun NavigationButton(
             contentDescription = contentDescription,
             tint = mainColor,
             modifier = Modifier
-                .fillMaxSize()
                 .padding(8.dp)
+        )
+
+        Text(
+            text = contentDescription,
+            color = mainColor,
+            textAlign = TextAlign.Center,
+            fontSize = 10.sp
         )
     }
 }
@@ -184,7 +193,7 @@ private fun NavigationButtonPreview() {
     QueueAppTheme (darkTheme = false) {
         NavigationButton(
             painter = painterResource(R.drawable.queue),
-            contentDescription = "Android",
+            contentDescription = "My Queues",
             isSelected = false,
             onClick = {}
         )
