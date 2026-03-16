@@ -26,6 +26,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hierarchy
 import org.koin.androidx.compose.koinViewModel
 import ru.naburnm8.queueapp.R
 import ru.naburnm8.queueapp.navigaton.viewmodel.NavigationState
@@ -35,93 +37,88 @@ import ru.naburnm8.queueapp.queueOperator.navigation.QueueOperatorFlowNavigation
 import ru.naburnm8.queueapp.ui.theme.QueueAppTheme
 
 private data class NavigationButtonConfig(
-    val state: NavigationState,
+    val route: String,
     val painter: Painter,
     val contentDescription: String,
-    val onClick: () -> Unit
 )
 
 @Composable
 fun QueueConsumerNavigationBar(
     modifier: Modifier = Modifier,
-    viewmodel: NavigationViewmodel = koinViewModel()
+    currentDestination: NavDestination?,
+    onTabClick: (String) -> Unit,
 ) {
     val buttons = listOf(
         NavigationButtonConfig(
-            state = NavigationState.QueueConsumer(QueueConsumerFlowNavigation.MyQueue),
+            route = QueueConsumerFlowNavigation.MyQueue.name,
             painter = painterResource(R.drawable.queue),
-            contentDescription = stringResource(R.string.my_queues),
-            onClick = {}
+            contentDescription = stringResource(R.string.my_queues)
         ),
         NavigationButtonConfig(
-            state = NavigationState.QueueConsumer(QueueConsumerFlowNavigation.MyRequests),
-            painter = painterResource(R.drawable.submission_request), // assignment on material icons
-            contentDescription = stringResource(R.string.my_submission_requests),
-            onClick = {}
+            route = QueueConsumerFlowNavigation.MyRequests.name,
+            painter = painterResource(R.drawable.submission_request),
+            contentDescription = stringResource(R.string.my_submission_requests)
         ),
         NavigationButtonConfig(
-            state = NavigationState.QueueConsumer(QueueConsumerFlowNavigation.MyProfile),
+            route = QueueConsumerFlowNavigation.MyProfile.name,
             painter = painterResource(R.drawable.profile),
-            contentDescription = stringResource(R.string.profile),
-            onClick = {}
+            contentDescription = stringResource(R.string.profile)
         )
     )
 
     AbstractNavigationBar(
         modifier = modifier,
-        viewmodel = viewmodel,
-        buttons = buttons
+        currentDestination = currentDestination,
+        buttons = buttons,
+        onTabClick = onTabClick
     )
 }
 
 @Composable
 fun QueueOperatorNavigationBar(
     modifier: Modifier = Modifier,
-    viewmodel: NavigationViewmodel = koinViewModel()
+    currentDestination: NavDestination?,
+    onTabClick: (String) -> Unit,
 ) {
     val buttons = listOf(
         NavigationButtonConfig(
-            state = NavigationState.QueueOperator(QueueOperatorFlowNavigation.MyQueues),
+            route = QueueOperatorFlowNavigation.MyQueues.name,
             painter = painterResource(R.drawable.queue),
-            contentDescription = stringResource(R.string.my_queues),
-            onClick = {}
+            contentDescription = stringResource(R.string.my_queues)
         ),
         NavigationButtonConfig(
-            state = NavigationState.QueueOperator(QueueOperatorFlowNavigation.Metrics),
+            route = QueueOperatorFlowNavigation.Metrics.name,
             painter = painterResource(R.drawable.star),
-            contentDescription = stringResource(R.string.metrics),
-            onClick = {}
+            contentDescription = stringResource(R.string.metrics)
         ),
 
         NavigationButtonConfig(
-            state = NavigationState.QueueOperator(QueueOperatorFlowNavigation.Disciplines),
+            route = QueueOperatorFlowNavigation.Disciplines.name,
             painter = painterResource(R.drawable.book),
-            contentDescription = stringResource(R.string.disciplines),
-            onClick = {}
+            contentDescription = stringResource(R.string.disciplines)
         ),
         NavigationButtonConfig(
-            state = NavigationState.QueueOperator(QueueOperatorFlowNavigation.Profile),
+            route = QueueOperatorFlowNavigation.Profile.name,
             painter = painterResource(R.drawable.profile),
-            contentDescription = stringResource(R.string.profile),
-            onClick = {}
+            contentDescription = stringResource(R.string.profile)
         )
     )
 
     AbstractNavigationBar(
         modifier = modifier,
-        viewmodel = viewmodel,
-        buttons = buttons
+        currentDestination = currentDestination,
+        buttons = buttons,
+        onTabClick = onTabClick
     )
 }
 
 @Composable
 private fun AbstractNavigationBar(
     modifier: Modifier = Modifier,
-    viewmodel: NavigationViewmodel = koinViewModel(),
-    buttons: List<NavigationButtonConfig>
+    currentDestination: NavDestination?,
+    buttons: List<NavigationButtonConfig>,
+    onTabClick: (String) -> Unit
 ) {
-    val currentState by viewmodel.stateFlow.collectAsState()
-
     Row (
         modifier = modifier.fillMaxWidth()
             .padding(top = 10.dp, bottom = 30.dp),
@@ -129,14 +126,14 @@ private fun AbstractNavigationBar(
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         buttons.forEach { config ->
+            val isSelected = currentDestination
+                ?.hierarchy
+                ?.any { it.route == config.route } == true
             NavigationButton(
                 painter = config.painter,
                 contentDescription = config.contentDescription,
-                isSelected = currentState == config.state,
-                onClick = {
-                    config.onClick()
-                    viewmodel.changeState(config.state)
-                }
+                isSelected = isSelected,
+                onClick = { onTabClick(config.route) }
             )
         }
     }

@@ -1,5 +1,6 @@
 package ru.naburnm8.queueapp.queueOperator.ui
 
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -10,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import org.koin.androidx.compose.koinViewModel
 import ru.naburnm8.queueapp.navigaton.ui.QueueOperatorNavigationBar
@@ -31,8 +33,26 @@ fun QueueOperatorFlow(
 
     val navController = rememberNavController()
 
+    val backStackEntry by navController.currentBackStackEntryAsState()
+
+    val currentDestination = backStackEntry?.destination
+
     Scaffold(
-        bottomBar = {QueueOperatorNavigationBar()}
+        bottomBar = {
+            QueueOperatorNavigationBar(
+                currentDestination = currentDestination,
+                onTabClick = {route ->
+                    navController.navigate(route) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+
+                }
+            )
+        }
     ) { ip ->
         NavHost(
             navController = navController,
@@ -46,26 +66,6 @@ fun QueueOperatorFlow(
             profileFlow(navController)
 
             studentMetricsFlow(navController)
-        }
-    }
-
-    LaunchedEffect(state) {
-        val target = (state as NavigationState.QueueOperator).route.name
-        val currentDestination = navController.currentBackStackEntry?.destination
-
-        val alreadyOnTarget = currentDestination
-            ?.hierarchy
-            ?.any { it.route == target } == true
-
-        if (!alreadyOnTarget) {
-            navController.navigate(target) {
-                launchSingleTop = true
-                restoreState = true
-                popUpTo(navController.graph.findStartDestination().id) {
-                    saveState = true
-                    inclusive = true
-                }
-            }
         }
     }
 }

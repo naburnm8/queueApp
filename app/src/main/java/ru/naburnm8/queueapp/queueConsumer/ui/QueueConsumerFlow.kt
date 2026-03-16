@@ -12,6 +12,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import org.koin.androidx.compose.koinViewModel
 import ru.naburnm8.queueapp.navigaton.ui.QueueConsumerNavigationBar
@@ -32,8 +33,24 @@ fun QueueConsumerFlow(
 
     val navController = rememberNavController()
 
+    val backStackEntry by navController.currentBackStackEntryAsState()
+
+    val currentDestination = backStackEntry?.destination
+
     Scaffold(
-        bottomBar = {QueueConsumerNavigationBar()}
+        bottomBar = {QueueConsumerNavigationBar(
+            currentDestination = currentDestination,
+            onTabClick = {route ->
+                navController.navigate(route) {
+                    popUpTo(navController.graph.findStartDestination().id) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
+                }
+
+            }
+        )}
     ) {
         ip ->
         NavHost(
@@ -46,26 +63,6 @@ fun QueueConsumerFlow(
             submissionRequestsFlow(navController)
 
             profileFlow(navController)
-        }
-    }
-
-    LaunchedEffect(state) {
-        val target = (state as NavigationState.QueueConsumer).route.name
-        val currentDestination = navController.currentBackStackEntry?.destination
-
-        val alreadyOnTarget = currentDestination
-            ?.hierarchy
-            ?.any { it.route == target } == true
-
-        if (!alreadyOnTarget) {
-            navController.navigate(target) {
-                launchSingleTop = true
-                restoreState = true
-                popUpTo(navController.graph.findStartDestination().id) {
-                    saveState = true
-                    inclusive = true
-                }
-            }
         }
     }
 }
