@@ -5,7 +5,6 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.HTTP
 import retrofit2.http.PUT
-import retrofit2.http.Path
 import retrofit2.http.Query
 import ru.naburnm8.queueapp.profile.request.UpdateProfileRequest
 import ru.naburnm8.queueapp.profile.response.StudentResponse
