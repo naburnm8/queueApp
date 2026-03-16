@@ -39,9 +39,6 @@ fun NavGraphBuilder.disciplinesFlow (
                 onNavigateToActiveDisciplineScreen = {
                     navController.navigate(DisciplinesNavigation.ViewActiveDisciplineSubgraph.name)
                 },
-                onNavigateToCreate = {
-                    navController.navigate(DisciplinesNavigation.CreateDiscipline)
-                }
             )
         }
 
