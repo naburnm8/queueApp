@@ -53,6 +53,7 @@ val viewmodelModule = module {
 
     viewModel {
         DisciplineViewmodel(
+            get(),
             get()
         )
     }

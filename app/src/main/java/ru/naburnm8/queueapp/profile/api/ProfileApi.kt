@@ -3,7 +3,9 @@ package ru.naburnm8.queueapp.profile.api
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.PUT
+import retrofit2.http.Path
 import retrofit2.http.Query
 import ru.naburnm8.queueapp.profile.request.UpdateProfileRequest
 import ru.naburnm8.queueapp.profile.response.StudentResponse
@@ -32,4 +34,12 @@ interface ProfileApi {
 
     @GET("/api/profile/students")
     suspend fun getAllOrByGroupStudents(@Query("group") group: String? = null): Response<List<StudentResponse>>
+
+
+    @HTTP(method = "POST", path = "/api/profile/email/teacher", hasBody = true)
+    suspend fun getTeacherByEmail(@Body email: String): Response<TeacherResponse>
+
+
+    @HTTP(method = "POST", path = "/api/profile/email/student", hasBody = true)
+    suspend fun getStudentByEmail(@Body email: String): Response<StudentResponse>
 }

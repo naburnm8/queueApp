@@ -43,6 +43,28 @@ class ProfileRepository (
         return Result.success(response.body()!!)
     }
 
+    suspend fun getTeacherByEmail(email: String): Result<TeacherResponse> {
+        val response = profileApi.getTeacherByEmail(email)
+        if (!response.isSuccessful) {
+            return Result.failure(IOException("${response.code()}, ${response.errorBody()}"))
+        }
+        if (response.body() == null) {
+            return Result.failure(IllegalStateException("Body is null"))
+        }
+        return Result.success(response.body()!!)
+    }
+
+    suspend fun getStudentByEmail(email: String): Result<StudentResponse> {
+        val response = profileApi.getStudentByEmail(email)
+        if (!response.isSuccessful) {
+            return Result.failure(IOException("${response.code()}, ${response.errorBody()}"))
+        }
+        if (response.body() == null) {
+            return Result.failure(IllegalStateException("Body is null"))
+        }
+        return Result.success(response.body()!!)
+    }
+
     suspend fun getAllDistinctGroups() : Result<List<String>> {
         val response = profileApi.getAllDistinctGroups()
         if (!response.isSuccessful) {

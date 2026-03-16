@@ -96,8 +96,8 @@ fun QueueOperatorNavigationBar(
 
         NavigationButtonConfig(
             state = NavigationState.QueueOperator(QueueOperatorFlowNavigation.Disciplines),
-            painter = painterResource(R.drawable.settings),
-            contentDescription = stringResource(R.string.settings),
+            painter = painterResource(R.drawable.book),
+            contentDescription = stringResource(R.string.disciplines),
             onClick = {}
         ),
         NavigationButtonConfig(

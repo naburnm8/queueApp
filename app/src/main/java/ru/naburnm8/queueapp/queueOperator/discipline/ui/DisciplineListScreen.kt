@@ -79,8 +79,9 @@ fun DisciplineListScreen(
                 modifier = modifier,
                 disciplines = (state.value as DisciplineState.Main).disciplines,
                 onDisciplineClick = {
-                    vm.switchActiveDiscipline(it)
-                    onNavigateToActiveDisciplineScreen()
+                    vm.switchActiveDiscipline(it) {
+                        onNavigateToActiveDisciplineScreen()
+                    }
                 },
                 onDeleteDisciplineClick = {
                     vm.deleteDisciplines(listOf(it.id))
@@ -258,7 +259,7 @@ private fun DisciplineListItem(
                 color = MaterialTheme.colorScheme.onSecondaryContainer,
                 textAlign = TextAlign.Left,
                 fontSize = 18.sp,
-                maxLines = 1,
+                maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
 

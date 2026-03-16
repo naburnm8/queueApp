@@ -2,7 +2,7 @@
     <string name="app_name">Queue App</string>
     <string name="profile">Profile</string>
     <string name="my_queues">My Queues</string>
-    <string name="settings">Settings</string>
+    <string name="disciplines">Disciplines</string>
     <string name="my_submission_requests">My Requests</string>
     <string name="error_occurred">An error occurred</string>
     <string name="login">Login</string>
@@ -39,4 +39,20 @@
     <string name="confirm_request">Please confirm your action</string>
     <string name="name">Name</string>
     <string name="personal_score_limit">Personal achievements score limit</string>
+    <string name="something_went_wrong">We\'re sorry. Something went wrong</string>
+    <string name="go_back">Go back</string>
+    <string name="owners">Owners</string>
+    <string name="add_owners">Add owners</string>
+    <string name="work_types">Work types</string>
+    <string name="add_work_type">Add work type</string>
+    <string name="time_in_minutes">Time in minutes</string>
+    <string name="submit">Submit</string>
+    <string name="delete_work_type">Delete work type</string>
+    <string name="minutes_short">min.</string>
+    <string name="edit">Edit</string>
+    <string name="edit_discipline">Edit discipline</string>
+    <string name="edit_work_type">Edit work type</string>
+    <string name="add_owner">Add owner</string>
+    <string name="leave">Leave discipline</string>
+    <string name="leave_discipline_affirmation">Are you sure you want to leave this discipline?</string>
 </resources>

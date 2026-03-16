@@ -65,4 +65,7 @@ interface DisciplineApi {
     @PUT("$URI_BASE/workTypes")
     suspend fun updateWorkTypes(@Body req: UpdateWorkTypesRequest): Response<WorkTypesResponse>
 
+    @POST("$URI_BASE/{disciplineId}/leave")
+    suspend fun leaveDiscipline(@Path("disciplineId") disciplineId: UUID): Response<Unit>
+
 }

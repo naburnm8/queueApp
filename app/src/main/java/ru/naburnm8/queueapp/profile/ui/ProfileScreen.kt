@@ -1,9 +1,11 @@
 package ru.naburnm8.queueapp.profile.ui
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ru.naburnm8.queueapp.profile.navigation.ProfileNavigation
@@ -38,7 +40,9 @@ fun ProfileScreen(
         }
         is ProfileState.Ready -> {
             Column(
-                modifier = modifier.padding(16.dp)
+                modifier = modifier.padding(16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 ProfileCard(
                     modifier = Modifier,

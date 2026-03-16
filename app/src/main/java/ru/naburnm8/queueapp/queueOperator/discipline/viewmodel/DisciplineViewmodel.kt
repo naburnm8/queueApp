@@ -8,6 +8,7 @@ import kotlinx.coroutines.launch
 import okio.IOException
 import ru.naburnm8.queueapp.profile.entity.ProfileEntity
 import ru.naburnm8.queueapp.profile.entity.ProfileMapper
+import ru.naburnm8.queueapp.profile.repository.ProfileRepository
 import ru.naburnm8.queueapp.queueOperator.discipline.entity.ActiveDisciplineEntity
 import ru.naburnm8.queueapp.queueOperator.discipline.entity.DisciplineEntity
 import ru.naburnm8.queueapp.queueOperator.discipline.entity.DisciplinesMapper
@@ -21,7 +22,8 @@ import ru.naburnm8.queueapp.request.DeleteRequest
 import java.util.UUID
 
 class DisciplineViewmodel (
-    private val repository: TeacherDisciplineRepository
+    private val repository: TeacherDisciplineRepository,
+    private val profileRepository: ProfileRepository
 ) : ViewModel() {
 
     private val _stateFlow = MutableStateFlow<DisciplineState>(DisciplineState.Loading)
@@ -106,8 +108,8 @@ class DisciplineViewmodel (
         return listOf() // Unreachable, but compiler requires it
     }
 
-    private suspend fun reloadActiveDiscipline(discipline: DisciplineEntity, previousState: DisciplineState.Main) {
-        _stateFlow.value = DisciplineState.Loading
+    private suspend fun reloadActiveDiscipline(discipline: DisciplineEntity, previousState: DisciplineState.Main, onSuccess: () -> Unit = {}) {
+        //_stateFlow.value = DisciplineState.Loading
         runCatching {
             val workTypes = loadWorkTypes(discipline.id)
             val owners = loadOwners(discipline.id)
@@ -119,20 +121,21 @@ class DisciplineViewmodel (
                     owners = owners
                 )
             )
+            onSuccess()
         }.onFailure {
             _stateFlow.value = DisciplineState.Error(it.message ?: "Unknown error")
         }
     }
 
-    private suspend fun switchActiveDisciplineInner(discipline: DisciplineEntity) {
+    private suspend fun switchActiveDisciplineInner(discipline: DisciplineEntity, onSuccess: () -> Unit = {}) {
         val previousState = _stateFlow.value
         if (previousState !is DisciplineState.Main) return
-        reloadActiveDiscipline(discipline, previousState)
+        reloadActiveDiscipline(discipline, previousState, onSuccess)
     }
 
-    fun switchActiveDiscipline(discipline: DisciplineEntity) {
+    fun switchActiveDiscipline(discipline: DisciplineEntity, onSuccess: () -> Unit = {}) {
         viewModelScope.launch {
-            switchActiveDisciplineInner(discipline)
+            switchActiveDisciplineInner(discipline, onSuccess)
         }
     }
 
@@ -191,7 +194,7 @@ class DisciplineViewmodel (
         }
     }
 
-    fun updateDiscipline(newDiscipline: DisciplineEntity) {
+    fun updateDiscipline(newDiscipline: DisciplineEntity, onSuccess: () -> Unit = {}) {
         viewModelScope.launch {
             val previousState = _stateFlow.value
             if (previousState !is DisciplineState.Main) return@launch
@@ -204,7 +207,7 @@ class DisciplineViewmodel (
                     )
                 )
                 if (result.isFailure) throw result.exceptionOrNull() ?: IOException("Unknown error")
-                switchActiveDiscipline(newDiscipline)
+                reloadActiveDiscipline(newDiscipline, previousState, onSuccess)
                 loadDisciplinesInner()
             }.onFailure {
                 _stateFlow.value = DisciplineState.Error(it.message ?: "Unknown error")
@@ -223,11 +226,48 @@ class DisciplineViewmodel (
                     UpdateWorkTypesRequest(updated.map { DisciplinesMapper.toDto(it) })
                 )
                 if (result.isFailure) throw result.exceptionOrNull() ?: IOException("Unknown error")
-                switchActiveDisciplineInner(previousState.activeDiscipline.discipline)
+                reloadActiveDiscipline(previousState.activeDiscipline.discipline, previousState)
             }.onFailure {
                 _stateFlow.value = DisciplineState.Error(it.message ?: "Unknown error")
             }
         }
+    }
+
+    fun addOwnerByEmail(email: String, onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            val previousState = _stateFlow.value
+            if (previousState !is DisciplineState.Main) return@launch
+            if (previousState.activeDiscipline == null) return@launch
+            _stateFlow.value = DisciplineState.Loading
+            runCatching {
+                val result = profileRepository.getTeacherByEmail(email)
+                if (result.isFailure) throw result.exceptionOrNull() ?: IOException("Unknown error")
+                val teacher = result.getOrNull() ?: throw IOException("Body is null")
+                val addOwnersResult = repository.addOwners(previousState.activeDiscipline.discipline.id, AddOwnersRequest(listOf(teacher.id)))
+                if (addOwnersResult.isFailure) throw addOwnersResult.exceptionOrNull() ?: IOException("Unknown error")
+                reloadActiveDiscipline(previousState.activeDiscipline.discipline, previousState, onSuccess)
+            }.onFailure {
+                _stateFlow.value = DisciplineState.Error(it.message ?: "Unknown error")
+            }
+        }
+    }
+
+    fun leaveDiscipline(onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            val previousState = _stateFlow.value
+            if (previousState !is DisciplineState.Main) return@launch
+            if (previousState.activeDiscipline == null) return@launch
+            _stateFlow.value = DisciplineState.Loading
+            runCatching {
+                val result = repository.leaveDiscipline(previousState.activeDiscipline.discipline.id)
+                if (result.isFailure) throw result.exceptionOrNull() ?: IOException("Unknown error")
+                loadDisciplinesInner()
+                onSuccess()
+            }.onFailure {
+                _stateFlow.value = DisciplineState.Error(it.message ?: "Unknown error")
+            }
+        }
+
     }
 
 

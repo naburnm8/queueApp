@@ -88,4 +88,10 @@ class TeacherDisciplineRepository(
             else Result.failure(IllegalStateException("Response body is null"))
         } else Result.failure(IOException("Failed to update work types: ${response.code()} ${response.message()}"))
     }
+
+    suspend fun leaveDiscipline(disciplineId: UUID): Result<Unit> {
+        val response = disciplineApi.leaveDiscipline(disciplineId)
+        return if (response.isSuccessful) Result.success(Unit)
+        else Result.failure(IOException("Failed to leave discipline: ${response.code()} ${response.message()}"))
+    }
 }

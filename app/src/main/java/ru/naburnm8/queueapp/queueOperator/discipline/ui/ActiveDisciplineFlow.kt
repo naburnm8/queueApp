@@ -1,6 +1,8 @@
 package ru.naburnm8.queueapp.queueOperator.discipline.ui
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -26,9 +28,11 @@ fun NavGraphBuilder.activeDisciplineFlow(
             val disciplineVm: DisciplineViewmodel = koinViewModel(viewModelStoreOwner = parentEntry)
 
             ActiveDisciplineViewScreen(
+                modifier = Modifier.fillMaxSize(),
                 vm = disciplineVm,
                 onNavigateToAddOwners = {navController.navigate(ActiveDisciplineNavigation.AddOwnersToDiscipline.name)},
-                onNavigateToEdit = {navController.navigate(ActiveDisciplineNavigation.EditDiscipline.name)}
+                onNavigateToEdit = {navController.navigate(ActiveDisciplineNavigation.EditDiscipline.name)},
+                onNavigateBackToRoot = {navController.popBackStack()}
             )
         }
 
@@ -40,11 +44,12 @@ fun NavGraphBuilder.activeDisciplineFlow(
             val disciplineVm: DisciplineViewmodel = koinViewModel(viewModelStoreOwner = parentEntry)
 
             ActiveDisciplineEditScreen(
+                modifier = Modifier.fillMaxSize(),
                 vm = disciplineVm,
-            ) {
-                navController.popBackStack()
-            }
-
+                onBackNavigate = {
+                    navController.popBackStack()
+                }
+            )
         }
 
         composable (ActiveDisciplineNavigation.AddOwnersToDiscipline.name) {
@@ -53,6 +58,14 @@ fun NavGraphBuilder.activeDisciplineFlow(
             }
 
             val disciplineVm: DisciplineViewmodel = koinViewModel(viewModelStoreOwner = parentEntry)
+
+            ActiveDisciplineAddOwnerScreen(
+                modifier = Modifier.fillMaxSize(),
+                vm = disciplineVm,
+                onBackNavigate = {
+                    navController.popBackStack()
+                }
+            )
         }
     }
 }
