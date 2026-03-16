@@ -30,4 +30,11 @@
     <string name="teacher_integration_notice">Sorry, teacher accounts can\'t be registered without an integration. Please contact staff.</string>
     <string name="edit_profile">Edit profile</string>
     <string name="metrics">Metrics</string>
+    <string name="your_disciplines">Your disciplines</string>
+    <string name="your_disciplines_empty">Your disciplines are empty. Add one.</string>
+    <string name="create_discipline">Create discipline</string>
+    <string name="delete_discipline">Delete discipline</string>
+    <string name="deletion_affirmation">Are you sure you want to delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm_request">Please confirm your action</string>
 </resources>
