@@ -37,4 +37,6 @@
     <string name="deletion_affirmation">Are you sure you want to delete</string>
     <string name="cancel">Cancel</string>
     <string name="confirm_request">Please confirm your action</string>
+    <string name="name">Name</string>
+    <string name="personal_score_limit">Personal achievements score limit</string>
 </resources>

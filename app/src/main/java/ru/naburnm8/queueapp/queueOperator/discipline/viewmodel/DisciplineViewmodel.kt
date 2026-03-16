@@ -69,12 +69,13 @@ class DisciplineViewmodel (
         }
     }
 
-    fun createDiscipline(req: DisciplineEntity) {
+    fun createDiscipline(req: DisciplineEntity, onSuccess: () -> Unit = {}) {
         viewModelScope.launch {
             runCatching {
                 val result = repository.createDiscipline(DisciplinesMapper.toCreateRequest(req))
                 if (result.isFailure) throw result.exceptionOrNull() ?: IOException("Unknown error")
                 loadDisciplinesInner()
+                onSuccess()
             }.onFailure {
                 _stateFlow.value = DisciplineState.Error(it.message ?: "Unknown error")
             }

@@ -4,6 +4,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -49,10 +50,12 @@ interface DisciplineApi {
     @POST("$URI_BASE/workTypes")
     suspend fun addWorkTypes(@Body req: AddWorkTypesRequest): Response<WorkTypesResponse>
 
-    @DELETE(URI_BASE)
+
+    @HTTP(method = "DELETE", path = URI_BASE, hasBody = true)
     suspend fun deleteDisciplines(@Body req: DeleteRequest): Response<Unit>
 
-    @DELETE("$URI_BASE/workTypes")
+
+    @HTTP(method = "DELETE", path = "$URI_BASE/workTypes", hasBody = true)
     suspend fun deleteWorkTypes(@Body req: DeleteRequest): Response<Unit>
 
 

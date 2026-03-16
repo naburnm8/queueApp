@@ -1,8 +1,12 @@
 package ru.naburnm8.queueapp.queueOperator.discipline.ui
 
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -27,6 +31,7 @@ fun NavGraphBuilder.disciplinesFlow (
             val disciplineVm: DisciplineViewmodel = koinViewModel(viewModelStoreOwner = parentEntry)
 
             DisciplineListScreen(
+                modifier = Modifier.fillMaxSize(),
                 vm = disciplineVm,
                 onNavigateToDisciplineCreation = {
                     navController.navigate(DisciplinesNavigation.CreateDiscipline.name)
@@ -47,7 +52,20 @@ fun NavGraphBuilder.disciplinesFlow (
 
             val disciplineVm: DisciplineViewmodel = koinViewModel(viewModelStoreOwner = parentEntry)
 
-            Text("Create")
+            val state by disciplineVm.stateFlow.collectAsState()
+
+            DisciplineCreateScreen(
+                modifier = Modifier.fillMaxSize(),
+                state = state,
+                onConfirm = {req ->
+                    disciplineVm.createDiscipline(req) {
+                        navController.popBackStack()
+                    }
+                },
+                onBackNavigate = {
+                    navController.popBackStack()
+                }
+            )
         }
 
 
