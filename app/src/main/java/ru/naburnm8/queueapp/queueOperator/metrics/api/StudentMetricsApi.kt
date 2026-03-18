@@ -28,7 +28,7 @@ interface StudentMetricsApi {
     ): Response<StudentMetricsResponse>
 
 
-    @PUT("$URI_BASE/{disciplineId}/students/{studentId}/metrics")
+    @PUT("$URI_BASE/{disciplineId}/student/{studentId}/metrics")
     suspend fun updateStudentMetrics(
         @Path("disciplineId") disciplineId: UUID,
         @Path("studentId") studentId: UUID,

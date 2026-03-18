@@ -61,6 +61,8 @@ val viewmodelModule = module {
 
     viewModel {
         StudentMetricsViewmodel(
+            get(),
+            get(),
             get()
         )
     }

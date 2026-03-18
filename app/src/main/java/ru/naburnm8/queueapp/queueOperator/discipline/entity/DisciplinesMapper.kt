@@ -27,6 +27,14 @@ object DisciplinesMapper {
         }
     }
 
+    fun map(dto: DisciplineDto): DisciplineEntity {
+        return DisciplineEntity(
+            id = dto.id,
+            name = dto.name,
+            personalAchievementsScoreLimit = dto.personalAchievementsScoreLimit,
+        )
+    }
+
     fun toCreateRequest(discipline: DisciplineEntity): CreateNewDisciplineRequest {
         return CreateNewDisciplineRequest(
             name = discipline.name,
