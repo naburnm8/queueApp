@@ -23,6 +23,7 @@ import ru.naburnm8.queueapp.authorization.token.TokenStorageImpl
 import ru.naburnm8.queueapp.profile.api.ProfileApi
 import ru.naburnm8.queueapp.queueOperator.discipline.api.DisciplineApi
 import ru.naburnm8.queueapp.queueOperator.metrics.api.StudentMetricsApi
+import ru.naburnm8.queueapp.queueOperator.queues.queueRules.api.QueueRulesApi
 import java.util.concurrent.TimeUnit
 
 private const val DEBUG_URL = "http://10.0.2.2:8081/"
@@ -127,6 +128,10 @@ val networkModule = module {
 
     single<StudentMetricsApi> {
         get<Retrofit>(named("main_retrofit")).create(StudentMetricsApi::class.java)
+    }
+
+    single<QueueRulesApi> {
+        get<Retrofit>(named("main_retrofit")).create(QueueRulesApi::class.java)
     }
 
 }
