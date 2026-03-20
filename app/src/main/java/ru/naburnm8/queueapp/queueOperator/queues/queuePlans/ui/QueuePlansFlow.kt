@@ -32,15 +32,31 @@ fun NavGraphBuilder.queuePlansFlow(
                 modifier = Modifier.fillMaxSize(),
                 vm = queuePlansVm,
                 onNavigateToCreate = {
-
+                    navController.navigate(QueuePlansNavigation.QueuePlansCreate.name)
                 },
                 onNavigateBack = {
-
+                    navController.popBackStack()
                 },
                 onNavigateToEdit = {
-
+                    navController.navigate(QueuePlansNavigation.QueuePlansEdit.name)
                 }
 
+            )
+        }
+
+        composable (QueuePlansNavigation.QueuePlansCreate.name) {
+            val parentEntry = remember(it) {
+                navController.getBackStackEntry(QueuesNavigation.QueuePlans.name)
+            }
+
+            val queuePlansVm: QueuePlansViewmodel = koinViewModel(viewModelStoreOwner = parentEntry)
+
+            QueuePlansCreateScreen(
+                modifier = Modifier.fillMaxSize(),
+                vm = queuePlansVm,
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
             )
         }
 

@@ -90,11 +90,16 @@ fun QueuePlansListScreen(
                 onDeletePlan = { plan, discipline ->
                     vm.deleteQueuePlan(plan.id ?: throw IllegalStateException("Plan id must be non-null"), discipline.id)
                 },
-                onEditPlan = {_, _ ->
-
-                    onNavigateToEdit()
+                onEditPlan = {plan, discipline ->
+                    vm.switchBundle(discipline, plan) {
+                        onNavigateToEdit()
+                    }
                 },
-                onCreatePlan = { onNavigateToCreate() }
+                onCreatePlan = {
+                    vm.switchBundle(it) {
+                        onNavigateToCreate()
+                    }
+                }
             )
         }
     }

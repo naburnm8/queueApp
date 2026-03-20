@@ -6,8 +6,6 @@ import ru.naburnm8.queueapp.queueOperator.queues.invitations.entity.InvitationEn
 import ru.naburnm8.queueapp.queueOperator.queues.queuePlans.entity.QueuePlanEntity
 
 data class ActiveQueuePlanBundle(
-    val activePlan: QueuePlanEntity,
     val teacher: ProfileEntity,
     val discipline: DisciplineEntity,
-    val invitations: List<InvitationEntity>
 )

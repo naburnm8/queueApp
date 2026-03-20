@@ -1,5 +1,6 @@
 package ru.naburnm8.queueapp.queueOperator.queues.queuePlans.entity
 
+import ru.naburnm8.queueapp.queueOperator.queues.queuePlans.request.QueuePlanRequest
 import ru.naburnm8.queueapp.queueOperator.queues.queuePlans.response.QueuePlanResponse
 
 object QueuePlansMapper {
@@ -17,6 +18,21 @@ object QueuePlansMapper {
             wAchievements = response.wAchievements,
             createdAt = response.createdAt,
             slotDurationMinutes = response.slotDurationMinutes
+        )
+    }
+
+    fun toRequest(entity: QueuePlanEntity): QueuePlanRequest {
+        return QueuePlanRequest(
+            id = entity.id,
+            title = entity.title,
+            useDebts = entity.useDebts,
+            wDebts = entity.wDebts,
+            useTime = entity.useTime,
+            wTime = entity.wTime,
+            useAchievements = entity.useAchievements,
+            wAchievements = entity.wAchievements,
+            slotDurationMinutes = entity.slotDurationMinutes,
+            status = entity.status
         )
     }
 }

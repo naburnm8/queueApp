@@ -69,4 +69,12 @@
     <string name="closed">Closed</string>
     <string name="status">Status</string>
     <string name="delete_queue_plan">Delete queue plan</string>
+    <string name="weight">Weight</string>
+    <string name="create_plan">Create plan</string>
+    <string name="edit_plan">Edit plan</string>
+    <string name="plan_name">Plan name</string>
+    <string name="slot_duration_in_minutes">Slot duration in minutes</string>
+    <string name="use_debts">Use debts</string>
+    <string name="use_slot_time">Use slot time</string>
+    <string name="use_personal_achievements">Use personal achievements</string>
 </resources>
