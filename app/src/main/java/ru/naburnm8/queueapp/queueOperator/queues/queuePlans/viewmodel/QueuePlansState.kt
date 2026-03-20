@@ -8,7 +8,6 @@ sealed class QueuePlansState {
     data class Error(val errorMessage: String): QueuePlansState()
     data class Main(
         val plansOfDisciplines: Map<DisciplineEntity, List<QueuePlanEntity>>,
-        val activePlan: QueuePlanEntity? = null,
-        val creatingForBundle: CreatingForBundle? = null
+        val activePlanBundle: ActiveQueuePlanBundle? = null
     ) : QueuePlansState()
 }

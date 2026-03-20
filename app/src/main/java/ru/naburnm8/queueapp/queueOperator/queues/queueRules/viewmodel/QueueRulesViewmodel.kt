@@ -9,6 +9,8 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.encodeToJsonElement
 import ru.naburnm8.queueapp.queueOperator.queues.queueRules.entity.QueueRuleMapper
 import ru.naburnm8.queueapp.queueOperator.queues.queueRules.repository.QueueRulesRepository
 import java.util.UUID
@@ -46,8 +48,8 @@ class QueueRulesViewmodel (
 
     private inline fun <reified T> serializeBody(
         body: @Serializable T
-    ): String {
-        return Json.encodeToString(body)
+    ): JsonElement {
+        return Json.encodeToJsonElement(body)
     }
 
 }

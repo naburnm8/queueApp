@@ -1,6 +1,7 @@
 package ru.naburnm8.queueapp.queueOperator.queues.queueRules.response
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonElement
 import ru.naburnm8.queueapp.queueOperator.queues.queueRules.entity.RuleType
 import ru.naburnm8.queueapp.serialization.UUIDSerializer
 import java.util.UUID
@@ -13,5 +14,5 @@ data class QueueRuleResponse(
     val enabled: Boolean,
     @Serializable(with = UUIDSerializer::class)
     val queuePlanId: UUID,
-    val payload: String
+    val payload: JsonElement
 )

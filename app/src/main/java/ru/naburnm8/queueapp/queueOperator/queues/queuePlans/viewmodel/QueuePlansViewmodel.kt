@@ -12,6 +12,7 @@ import ru.naburnm8.queueapp.queueOperator.discipline.repository.TeacherDisciplin
 import ru.naburnm8.queueapp.queueOperator.queues.queuePlans.entity.QueuePlanEntity
 import ru.naburnm8.queueapp.queueOperator.queues.queuePlans.entity.QueuePlansMapper
 import ru.naburnm8.queueapp.queueOperator.queues.queuePlans.repository.QueuePlansRepository
+import java.util.UUID
 
 class QueuePlansViewmodel (
     private val profileRepository: ProfileRepository,
@@ -25,6 +26,24 @@ class QueuePlansViewmodel (
 
     init {
         loadQueuePlans()
+    }
+
+    fun loadQueuePlans(onSuccess: () -> Unit = {}) {
+        _stateFlow.value = QueuePlansState.Loading
+        viewModelScope.launch {
+            loadQueuePlansInner(onSuccess)
+        }
+    }
+
+    fun deleteQueuePlan(queuePlanId: UUID, disciplineId: UUID, onSuccess: () -> Unit = {}) {
+        viewModelScope.launch {
+            runCatching {
+                queuePlansRepository.deletePlan(disciplineId, queuePlanId).getOrThrow()
+                loadQueuePlansInner(onSuccess)
+            }.onFailure {
+                _stateFlow.value = QueuePlansState.Error(it.message ?: "Unknown error")
+            }
+        }
     }
 
     private suspend fun loadQueuePlansInner(onSuccess: () -> Unit = {}) {
@@ -56,11 +75,6 @@ class QueuePlansViewmodel (
         }
     }
 
-    fun loadQueuePlans(onSuccess: () -> Unit = {}) {
-        _stateFlow.value = QueuePlansState.Loading
-        viewModelScope.launch {
-            loadQueuePlansInner(onSuccess)
-        }
-    }
+
 
 }

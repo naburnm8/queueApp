@@ -11,16 +11,21 @@ sealed class QueueRulesState {
         val queuePlanId: UUID,
         val queueRules: List<QueueRuleEntity>
     ) : QueueRulesState() {
-        class AddingGroupBonus (
+        class GroupBonus (
             queuePlanId: UUID,
             queueRules: List<QueueRuleEntity>,
             val distinctGroups: List<String>,
-        ) : QueueRulesState.Main(queuePlanId, queueRules)
+        ) : Main(queuePlanId, queueRules)
 
-        class AddingIdentifierBonus (
+        class IdentifierBonus (
             queuePlanId: UUID,
             queueRules: List<QueueRuleEntity>,
             val studentsToGroups: Map<String, List<ProfileEntity>>
-        ) : QueueRulesState.Main(queuePlanId, queueRules)
+        ) : Main(queuePlanId, queueRules)
+
+        class OtherType (
+            queuePlanId: UUID,
+            queueRules: List<QueueRuleEntity>,
+        ) : Main(queuePlanId, queueRules)
     }
 }

@@ -70,5 +70,13 @@ class QueuePlansRepository (
         return returnResult(response)
     }
 
+    suspend fun deletePlan(
+        disciplineId: UUID,
+        queuePlanId: UUID
+    ) : Result<Unit> {
+        val response = queuePlansApi.deletePlan(disciplineId, queuePlanId)
+        return returnResult(response)
+    }
+
 
 }

@@ -8,6 +8,7 @@ import ru.naburnm8.queueapp.profile.repository.ProfileRepository
 import ru.naburnm8.queueapp.queueOperator.discipline.repository.StudentDisciplineRepository
 import ru.naburnm8.queueapp.queueOperator.discipline.repository.TeacherDisciplineRepository
 import ru.naburnm8.queueapp.queueOperator.metrics.repository.StudentMetricsRepository
+import ru.naburnm8.queueapp.queueOperator.queues.invitations.repository.InvitationsRepository
 import ru.naburnm8.queueapp.queueOperator.queues.queuePlans.api.QueuePlansApi
 import ru.naburnm8.queueapp.queueOperator.queues.queuePlans.repository.QueuePlansRepository
 import ru.naburnm8.queueapp.queueOperator.queues.queueRules.repository.QueueRulesRepository
@@ -45,5 +46,9 @@ val repositoryModule = module {
     }
     single {
         QueuePlansRepository(get())
+    }
+
+    single {
+        InvitationsRepository(get())
     }
 }

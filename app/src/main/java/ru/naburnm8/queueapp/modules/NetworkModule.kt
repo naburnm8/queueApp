@@ -23,6 +23,7 @@ import ru.naburnm8.queueapp.authorization.token.TokenStorageImpl
 import ru.naburnm8.queueapp.profile.api.ProfileApi
 import ru.naburnm8.queueapp.queueOperator.discipline.api.DisciplineApi
 import ru.naburnm8.queueapp.queueOperator.metrics.api.StudentMetricsApi
+import ru.naburnm8.queueapp.queueOperator.queues.invitations.api.InvitationsApi
 import ru.naburnm8.queueapp.queueOperator.queues.queuePlans.api.QueuePlansApi
 import ru.naburnm8.queueapp.queueOperator.queues.queueRules.api.QueueRulesApi
 import java.util.concurrent.TimeUnit
@@ -137,6 +138,10 @@ val networkModule = module {
 
     single<QueuePlansApi> {
         get<Retrofit>(named("main_retrofit")).create(QueuePlansApi::class.java)
+    }
+
+    single<InvitationsApi> {
+        get<Retrofit>(named("main_retrofit")).create(InvitationsApi::class.java)
     }
 
 }
