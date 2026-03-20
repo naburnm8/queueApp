@@ -17,7 +17,7 @@ class QueueRulesRepository (
             }
             Result.success(response.body()!!)
         } else {
-            Result.failure(IOException("Failed to add rule: ${response.code()}"))
+            Result.failure(IOException("Failed queue plan request: ${response.code()}"))
         }
     }
     suspend fun addRule(
