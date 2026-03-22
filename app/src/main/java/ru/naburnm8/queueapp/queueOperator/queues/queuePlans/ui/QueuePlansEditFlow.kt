@@ -16,6 +16,8 @@ import ru.naburnm8.queueapp.queueOperator.queues.queuePlans.navigation.QueuePlan
 import ru.naburnm8.queueapp.queueOperator.queues.queuePlans.navigation.QueuePlansNavigation
 import ru.naburnm8.queueapp.queueOperator.queues.queuePlans.viewmodel.QueuePlansState
 import ru.naburnm8.queueapp.queueOperator.queues.queuePlans.viewmodel.QueuePlansViewmodel
+import ru.naburnm8.queueapp.queueOperator.queues.queueRules.ui.queueRulesFlow
+import ru.naburnm8.queueapp.queueOperator.queues.queueRules.viewmodel.QueueRulesViewmodel
 
 fun NavGraphBuilder.queuePlansEditFlow(
     navController: NavHostController
@@ -31,6 +33,7 @@ fun NavGraphBuilder.queuePlansEditFlow(
 
             val queuePlansVm: QueuePlansViewmodel = koinViewModel(viewModelStoreOwner = parentEntry)
             val invitationsViewmodel: InvitationsViewmodel = koinViewModel(viewModelStoreOwner = parentEntry)
+            val rulesViewmodel: QueueRulesViewmodel = koinViewModel(viewModelStoreOwner = parentEntry)
 
             val queuePlansState = queuePlansVm.stateFlow.collectAsState().value
 
@@ -41,7 +44,11 @@ fun NavGraphBuilder.queuePlansEditFlow(
                     navController.popBackStack()
                 },
                 onNavigateToRules = {
-                    navController.navigate(QueuePlansEditNavigation.QueuePlansEditRules.name)
+                    if (queuePlansState is QueuePlansState.Main && queuePlansState.activePlan != null) {
+                        rulesViewmodel.loadRules(queuePlansState.activePlan) {
+                            navController.navigate(QueuePlansEditNavigation.QueuePlansEditRules.name)
+                        }
+                    }
                 },
                 onNavigateToInvitations = {
                     if (queuePlansState is QueuePlansState.Main && queuePlansState.activePlan != null) {
@@ -72,9 +79,7 @@ fun NavGraphBuilder.queuePlansEditFlow(
             )
         }
 
-        composable (QueuePlansEditNavigation.QueuePlansEditRules.name) {
-
-        }
+        queueRulesFlow(navController)
     }
 
 }

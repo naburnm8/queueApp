@@ -1,6 +1,7 @@
 package ru.naburnm8.queueapp.queueOperator.queues.queueRules.viewmodel
 
 import ru.naburnm8.queueapp.profile.entity.ProfileEntity
+import ru.naburnm8.queueapp.queueOperator.queues.queuePlans.entity.QueuePlanEntity
 import ru.naburnm8.queueapp.queueOperator.queues.queueRules.entity.QueueRuleEntity
 import java.util.UUID
 
@@ -8,24 +9,28 @@ sealed class QueueRulesState {
     data object Loading : QueueRulesState()
     data class Error(val errorMessage: String) : QueueRulesState()
     open class Main (
-        val queuePlanId: UUID,
-        val queueRules: List<QueueRuleEntity>
+        val queuePlan: QueuePlanEntity,
+        val queueRules: List<QueueRuleEntity>,
+        val activeRule: QueueRuleEntity? = null,
     ) : QueueRulesState() {
         class GroupBonus (
-            queuePlanId: UUID,
+            queuePlan: QueuePlanEntity,
             queueRules: List<QueueRuleEntity>,
+            activeRule: QueueRuleEntity? = null,
             val distinctGroups: List<String>,
-        ) : Main(queuePlanId, queueRules)
+        ) : Main(queuePlan, queueRules, activeRule)
 
         class IdentifierBonus (
-            queuePlanId: UUID,
+            queuePlan: QueuePlanEntity,
             queueRules: List<QueueRuleEntity>,
+            activeRule: QueueRuleEntity? = null,
             val studentsToGroups: Map<String, List<ProfileEntity>>
-        ) : Main(queuePlanId, queueRules)
+        ) : Main(queuePlan, queueRules, activeRule)
 
         class OtherType (
-            queuePlanId: UUID,
+            queuePlan: QueuePlanEntity,
             queueRules: List<QueueRuleEntity>,
-        ) : Main(queuePlanId, queueRules)
+            activeRule: QueueRuleEntity? = null,
+        ) : Main(queuePlan, queueRules, activeRule)
     }
 }

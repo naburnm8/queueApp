@@ -11,12 +11,15 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.encodeToJsonElement
+import ru.naburnm8.queueapp.profile.repository.ProfileRepository
+import ru.naburnm8.queueapp.queueOperator.queues.queuePlans.entity.QueuePlanEntity
 import ru.naburnm8.queueapp.queueOperator.queues.queueRules.entity.QueueRuleMapper
 import ru.naburnm8.queueapp.queueOperator.queues.queueRules.repository.QueueRulesRepository
 import java.util.UUID
 
 class QueueRulesViewmodel (
-    private val queueRulesRepository: QueueRulesRepository
+    private val queueRulesRepository: QueueRulesRepository,
+    private val profileRepository: ProfileRepository
 ) : ViewModel() {
 
     private val _stateFlow = MutableStateFlow<QueueRulesState>(QueueRulesState.Loading)
@@ -25,19 +28,19 @@ class QueueRulesViewmodel (
 
 
 
-    fun loadRules(queuePlanId: UUID, onSuccess: () -> Unit) {
+    fun loadRules(queuePlan: QueuePlanEntity, onSuccess: () -> Unit) {
         _stateFlow.value = QueueRulesState.Loading
         viewModelScope.launch {
-            loadRulesInner(queuePlanId, onSuccess)
+            loadRulesInner(queuePlan, onSuccess)
         }
     }
 
-    private suspend fun loadRulesInner(queuePlanId: UUID, onSuccess: () -> Unit) {
+    private suspend fun loadRulesInner(queuePlan: QueuePlanEntity, onSuccess: () -> Unit) {
         runCatching {
-            val result = queueRulesRepository.getRules(queuePlanId)
+            val result = queueRulesRepository.getRules(queuePlan.id!!)
             val rules = result.getOrThrow()
             _stateFlow.value = QueueRulesState.Main(
-                queuePlanId,
+                queuePlan,
                 rules.map { QueueRuleMapper.map(it)}
             )
             onSuccess()
