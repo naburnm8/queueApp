@@ -11,7 +11,7 @@ sealed class QueueRulesState {
     open class Main (
         val queuePlan: QueuePlanEntity,
         val queueRules: List<QueueRuleEntity>,
-        val activeRule: QueueRuleEntity? = null,
+        var activeRule: QueueRuleEntity? = null,
     ) : QueueRulesState() {
         class GroupBonus (
             queuePlan: QueuePlanEntity,

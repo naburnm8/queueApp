@@ -181,23 +181,33 @@ fun InvitationsScreenComponent(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(30.dp))
-                .background(MaterialTheme.colorScheme.primaryContainer)
-                .padding(16.dp)
-                .heightIn(max = 500.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(
-                items = invitations,
-                key = { it.id }
-            ) { invitation ->
-                InvitationItem(
-                    invitation = invitation,
-                    onDelete = { onDelete(invitation) }
-                )
+        if (invitations.isEmpty()) {
+            Text(
+                text = stringResource(R.string.no_invitations_yet),
+                color = MaterialTheme.colorScheme.onBackground,
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.fillMaxWidth()
+            )
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(30.dp))
+                    .background(MaterialTheme.colorScheme.primaryContainer)
+                    .padding(16.dp)
+                    .heightIn(max = 500.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(
+                    items = invitations,
+                    key = { it.id }
+                ) { invitation ->
+                    InvitationItem(
+                        invitation = invitation,
+                        onDelete = { onDelete(invitation) }
+                    )
+                }
             }
         }
 

@@ -96,4 +96,25 @@
     <string name="identifier_bonus">Identifier bonus</string>
     <string name="timestamp_bonus">Timestamp bonus</string>
     <string name="custom_rule">Custom rule</string>
+    <string name="choose_rule_type">Choose rule type</string>
+    <string name="confirm">Confirm</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="confirm_rule_deletion">Are you sure you want to delete this rule?</string>
+    <string name="rules_of_plan">Rules of plan</string>
+    <string name="no_rules_yet">No rules yet</string>
+    <string name="no_invitations_yet">No invitations yet</string>
+    <string name="create_rule">Create rule</string>
+    <string name="ok">OK</string>
+    <string name="pick_time">Pick time</string>
+    <string name="save_rule">Save rule</string>
+    <string name="edit_rule">Edit rule</string>
+    <string name="bonus">Bonus</string>
+    <string name="end_interval">End interval</string>
+    <string name="start_interval">Start interval</string>
+    <string name="choose_at_least_one_group">Please choose at least one group</string>
+    <string name="groups">Groups</string>
+    <string name="full_name">Full name</string>
+    <string name="choose_at_least_one_student">Please choose at least one student</string>
+    <string name="students">Students</string>
+    <string name="identifier_field">Identifier field</string>
 </resources>

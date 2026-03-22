@@ -11,6 +11,6 @@ data class QueueRuleRequest(
     @Serializable(with = UUIDSerializer::class)
     val id: UUID? = null,
     val type: RuleType,
-    val enabled: Boolean = true,
+    val enabled: Boolean,
     val payload: JsonElement
 )
