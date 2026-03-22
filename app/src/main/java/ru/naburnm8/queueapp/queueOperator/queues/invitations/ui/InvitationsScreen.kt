@@ -46,7 +46,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -126,7 +125,7 @@ fun InvitationsScreenComponentPreview() {
                     code = "ABC123",
                     targetStudents = emptyList(),
                     createdAt = Instant.now().minusSeconds(3600),
-                    expiresAt = Instant.now().plusSeconds(3600),
+                    expiresAt = Instant.now().plusSeconds(3600000),
                     maxUses = 10,
                     usedCount = 3
                 ),
@@ -313,7 +312,7 @@ private fun InvitationItem(
 
             Text(
                 text = "${stringResource(R.string.used_count)}: ${invitation.usedCount}/${invitation.maxUses}",
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = if(invitation.maxUses > invitation.usedCount) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.error,
                 fontSize = 14.sp
             )
 
@@ -337,9 +336,11 @@ private fun InvitationItem(
 
             Spacer(modifier = Modifier.height(4.dp))
 
+            val isActive = invitation.expiresAt > Instant.now() && invitation.enabled && invitation.usedCount < invitation.maxUses
+
             Text(
-                text = if (invitation.expiresAt > Instant.now()) stringResource(R.string.active) else stringResource(R.string.inactive),
-                color = if (invitation.expiresAt > Instant.now()) {
+                text = if (isActive) stringResource(R.string.active) else stringResource(R.string.inactive),
+                color = if (isActive) {
                     MaterialTheme.colorScheme.primary
                 } else {
                     MaterialTheme.colorScheme.error

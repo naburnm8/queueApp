@@ -92,4 +92,8 @@
     <string name="created">Created</string>
     <string name="used_count">Used count</string>
     <string name="invitations_for">Invitations for</string>
+    <string name="group_name_bonus">Group bonus</string>
+    <string name="identifier_bonus">Identifier bonus</string>
+    <string name="timestamp_bonus">Timestamp bonus</string>
+    <string name="custom_rule">Custom rule</string>
 </resources>
