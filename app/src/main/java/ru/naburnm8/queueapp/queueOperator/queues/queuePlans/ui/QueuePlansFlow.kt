@@ -21,6 +21,8 @@ fun NavGraphBuilder.queuePlansFlow(
         route = QueuesNavigation.QueuePlans.name,
         startDestination = QueuePlansNavigation.QueuePlansList.name
     ) {
+        queuePlansEditFlow(navController)
+
         composable (QueuePlansNavigation.QueuePlansList.name) {
             val parentEntry = remember(it) {
                 navController.getBackStackEntry(QueuesNavigation.QueuePlans.name)

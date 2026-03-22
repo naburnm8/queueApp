@@ -1,13 +1,11 @@
-package ru.naburnm8.queueapp.queueOperator.queues.invitations.entity
+package ru.naburnm8.queueapp.queueOperator.queues.invitations.item
 
 import ru.naburnm8.queueapp.profile.entity.ProfileEntity
-import ru.naburnm8.queueapp.profile.response.StudentResponse
 import java.time.Instant
 import java.util.UUID
 
-data class InvitationEntity(
+data class InvitationItem(
     val id: UUID,
-    val queuePlanId: UUID,
     val enabled: Boolean,
     val code: String? = null,
     val targetGroup: String? = null,

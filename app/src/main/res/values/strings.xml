@@ -66,6 +66,7 @@
     <string name="queue_plans">Queue plans</string>
     <string name="draft">Draft</string>
     <string name="active">Active</string>
+    <string name="inactive">Inactive</string>
     <string name="closed">Closed</string>
     <string name="status">Status</string>
     <string name="delete_queue_plan">Delete queue plan</string>
@@ -77,4 +78,18 @@
     <string name="use_debts">Use debts</string>
     <string name="use_slot_time">Use slot time</string>
     <string name="use_personal_achievements">Use personal achievements</string>
+    <string name="invitations">Invitations</string>
+    <string name="rules">Rules</string>
+    <string name="delete_invitation">Delete invitation</string>
+    <string name="delete_invitation_affirmation">Are you sure you want to delete this invitation?</string>
+    <string name="at_least_one_target">Please choose at least one target</string>
+    <string name="max_uses">Max uses</string>
+    <string name="expires">Expires</string>
+    <string name="not_chosen">Not chosen</string>
+    <string name="group">Group</string>
+    <string name="short_code">Short code</string>
+    <string name="create_invitation">Create invitation</string>
+    <string name="created">Created</string>
+    <string name="used_count">Used count</string>
+    <string name="invitations_for">Invitations for</string>
 </resources>

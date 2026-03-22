@@ -17,4 +17,21 @@ data class QueuePlanEntity(
     val wAchievements: Double,
     val createdAt: Instant,
     val slotDurationMinutes: Int,
-)
+) {
+    companion object {
+        val mock = QueuePlanEntity(
+            id = UUID.randomUUID(),
+            createdByTeacherId = UUID.randomUUID(),
+            title = "План очереди 1",
+            status = QueueStatus.ACTIVE,
+            useDebts = true,
+            wDebts = 0.5,
+            useTime = true,
+            wTime = 0.3,
+            useAchievements = true,
+            wAchievements = 0.2,
+            createdAt = Instant.now(),
+            slotDurationMinutes = 15
+        )
+    }
+}

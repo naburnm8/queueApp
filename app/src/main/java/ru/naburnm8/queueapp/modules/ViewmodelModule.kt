@@ -9,6 +9,7 @@ import ru.naburnm8.queueapp.navigaton.viewmodel.NavigationViewmodel
 import ru.naburnm8.queueapp.profile.viewmodel.ProfileViewmodel
 import ru.naburnm8.queueapp.queueOperator.discipline.viewmodel.DisciplineViewmodel
 import ru.naburnm8.queueapp.queueOperator.metrics.viewmodel.StudentMetricsViewmodel
+import ru.naburnm8.queueapp.queueOperator.queues.invitations.viewmodel.InvitationsViewmodel
 import ru.naburnm8.queueapp.queueOperator.queues.queuePlans.viewmodel.QueuePlansViewmodel
 import ru.naburnm8.queueapp.viewmodel.InterViewmodelBridge
 
@@ -70,6 +71,12 @@ val viewmodelModule = module {
     viewModel {
         QueuePlansViewmodel(
             get(),
+            get(),
+            get()
+        )
+    }
+    viewModel {
+        InvitationsViewmodel(
             get(),
             get()
         )

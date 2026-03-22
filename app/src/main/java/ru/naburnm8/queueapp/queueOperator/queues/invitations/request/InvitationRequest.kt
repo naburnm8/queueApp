@@ -15,6 +15,6 @@ data class InvitationRequest(
     val targetStudentIds: List<@Serializable(with = UUIDSerializer::class) UUID>? = null,
     @Serializable(with = InstantSerializer::class)
     val expiresAt: Instant = Instant.MAX,
-    val enabled: Boolean = true,
+    val enabled: Boolean,
     val maxUses: Int = Int.MAX_VALUE,
 )
