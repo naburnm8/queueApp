@@ -7,6 +7,7 @@ import ru.naburnm8.queueapp.authorization.viewmodel.AuthorizationViewmodel
 import ru.naburnm8.queueapp.authorization.viewmodel.RegistrationViewmodel
 import ru.naburnm8.queueapp.navigaton.viewmodel.NavigationViewmodel
 import ru.naburnm8.queueapp.profile.viewmodel.ProfileViewmodel
+import ru.naburnm8.queueapp.queueConsumer.submissionRequests.viewmodel.SubmissionRequestsViewmodel
 import ru.naburnm8.queueapp.queueOperator.discipline.viewmodel.DisciplineViewmodel
 import ru.naburnm8.queueapp.queueOperator.metrics.viewmodel.StudentMetricsViewmodel
 import ru.naburnm8.queueapp.queueOperator.queues.invitations.viewmodel.InvitationsViewmodel
@@ -84,6 +85,15 @@ val viewmodelModule = module {
     }
     viewModel {
         QueueRulesViewmodel(
+            get(),
+            get()
+        )
+    }
+
+    viewModel {
+        SubmissionRequestsViewmodel(
+            get(),
+            get(),
             get(),
             get()
         )

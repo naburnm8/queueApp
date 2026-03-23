@@ -5,7 +5,7 @@ import java.time.Instant
 import java.util.UUID
 
 data class SubmissionRequestEntity(
-    val id: UUID,
+    val id: UUID?,
     val queuePlanId: UUID,
     val studentId: UUID,
     val status: SubmissionStatus,

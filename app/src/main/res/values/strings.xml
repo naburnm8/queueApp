@@ -118,4 +118,18 @@
     <string name="students">Students</string>
     <string name="identifier_field">Identifier field</string>
     <string name="refresh">Refresh</string>
+    <string name="create">Create</string>
+    <string name="no_submission_requests">No submission requests yet</string>
+    <string name="status_pending">Pending</string>
+    <string name="status_enqueued">Enqueued</string>
+    <string name="status_rejected">Rejected</string>
+    <string name="status_dequeued">Dequeued</string>
+    <string name="choose_plan">Choose a queue plan</string>
+    <string name="quantity">Quantity</string>
+    <string name="minutes_per_one">min. per one</string>
+    <string name="save">Save</string>
+    <string name="chosen_positions">Chosen positions</string>
+    <string name="total_minutes">Total minutes</string>
+    <string name="create_request">Create request</string>
+    <string name="edit_request">Edit request</string>
 </resources>

@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,7 +39,8 @@ fun SlideToConfirm(
     modifier: Modifier = Modifier,
     text: String,
     enabled: Boolean = true,
-    onConfirmed: () -> Unit
+    resetKey: Int = 0,
+    onConfirmed: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val density = LocalDensity.current
@@ -51,6 +53,13 @@ fun SlideToConfirm(
 
     val maxOffset = (trackWidthPx - thumbSizePx).coerceAtLeast(0f)
     val confirmThreshold = maxOffset * 0.85f
+
+    LaunchedEffect(resetKey) {
+        offsetX.animateTo(
+            targetValue = 0f,
+            animationSpec = tween(250)
+        )
+    }
 
     Box(
         modifier = modifier

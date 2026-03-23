@@ -12,4 +12,15 @@ data class QueuePlanShortEntity(
     val status: QueueStatus,
     val teacher: ProfileEntity,
     val slotDurationMinutes: Int,
-)
+) {
+    companion object {
+        val mock = QueuePlanShortEntity(
+            id = UUID(0,0),
+            title = "Очередь 1",
+            discipline = DisciplineEntity.mock,
+            status = QueueStatus.ACTIVE,
+            teacher = ProfileEntity.teacherMock,
+            slotDurationMinutes = 15,
+        )
+    }
+}

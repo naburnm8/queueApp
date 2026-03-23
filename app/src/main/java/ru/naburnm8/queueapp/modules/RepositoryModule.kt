@@ -5,6 +5,7 @@ import ru.naburnm8.queueapp.authorization.repository.AuthorizationRepository
 import ru.naburnm8.queueapp.authorization.repository.IntegrationRepository
 import ru.naburnm8.queueapp.authorization.repository.RegistrationRepository
 import ru.naburnm8.queueapp.profile.repository.ProfileRepository
+import ru.naburnm8.queueapp.queueConsumer.queue.queuePlans.repository.QueuePlansShortRepository
 import ru.naburnm8.queueapp.queueConsumer.submissionRequests.repository.SubmissionRequestsRepository
 import ru.naburnm8.queueapp.queueOperator.discipline.repository.StudentDisciplineRepository
 import ru.naburnm8.queueapp.queueOperator.discipline.repository.TeacherDisciplineRepository
@@ -54,5 +55,8 @@ val repositoryModule = module {
     }
     single {
         SubmissionRequestsRepository(get())
+    }
+    single {
+        QueuePlansShortRepository(get())
     }
 }

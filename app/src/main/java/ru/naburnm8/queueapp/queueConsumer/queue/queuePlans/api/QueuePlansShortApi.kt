@@ -9,7 +9,7 @@ interface QueuePlansShortApi {
         const val URI_BASE = "/api"
     }
 
-    @GET("/queuePlans")
+    @GET("$URI_BASE/queuePlans")
     suspend fun getQueuePlans(): Response<List<QueuePlanShortResponse>>
 
 }

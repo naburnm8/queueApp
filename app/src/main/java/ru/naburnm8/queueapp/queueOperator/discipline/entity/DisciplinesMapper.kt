@@ -17,6 +17,14 @@ object DisciplinesMapper {
         }
     }
 
+    fun map(response: WorkTypeDto) : WorkTypeEntity {
+        return WorkTypeEntity(
+            id = response.id,
+            name = response.name,
+            estimatedTimeMinutes = response.estimatedTimeMinutes
+        )
+    }
+
     fun map(response: WorkTypesResponse): List<WorkTypeEntity> {
         return response.workTypes.map { workType ->
             WorkTypeEntity(
