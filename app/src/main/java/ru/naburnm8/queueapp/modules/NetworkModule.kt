@@ -21,6 +21,7 @@ import ru.naburnm8.queueapp.authorization.token.TokenRefresherImpl
 import ru.naburnm8.queueapp.authorization.token.TokenStorage
 import ru.naburnm8.queueapp.authorization.token.TokenStorageImpl
 import ru.naburnm8.queueapp.profile.api.ProfileApi
+import ru.naburnm8.queueapp.queueConsumer.queue.queuePlans.api.QueuePlansShortApi
 import ru.naburnm8.queueapp.queueConsumer.submissionRequests.api.SubmissionRequestsApi
 import ru.naburnm8.queueapp.queueOperator.discipline.api.DisciplineApi
 import ru.naburnm8.queueapp.queueOperator.metrics.api.StudentMetricsApi
@@ -147,6 +148,10 @@ val networkModule = module {
 
     single <SubmissionRequestsApi> {
         get<Retrofit>(named("main_retrofit")).create(SubmissionRequestsApi::class.java)
+    }
+
+    single <QueuePlansShortApi> {
+        get<Retrofit>(named("main_retrofit")).create(QueuePlansShortApi::class.java)
     }
 
 }

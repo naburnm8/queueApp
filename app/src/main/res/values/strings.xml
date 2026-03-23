@@ -117,4 +117,5 @@
     <string name="choose_at_least_one_student">Please choose at least one student</string>
     <string name="students">Students</string>
     <string name="identifier_field">Identifier field</string>
+    <string name="refresh">Refresh</string>
 </resources>
