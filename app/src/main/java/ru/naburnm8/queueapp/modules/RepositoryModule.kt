@@ -14,6 +14,7 @@ import ru.naburnm8.queueapp.queueOperator.queues.invitations.repository.Invitati
 import ru.naburnm8.queueapp.queueOperator.queues.queuePlans.api.QueuePlansApi
 import ru.naburnm8.queueapp.queueOperator.queues.queuePlans.repository.QueuePlansRepository
 import ru.naburnm8.queueapp.queueOperator.queues.queueRules.repository.QueueRulesRepository
+import ru.naburnm8.queueapp.queueOperator.queues.repository.QueuesRepository
 
 val repositoryModule = module {
     single {
@@ -58,5 +59,9 @@ val repositoryModule = module {
     }
     single {
         QueuePlansShortRepository(get())
+    }
+
+    single {
+        QueuesRepository(get())
     }
 }

@@ -79,7 +79,9 @@ fun QueuePlansListScreen(
             GenericLoadingScreen(modifier)
         }
         is QueuePlansState.Error -> {
-            GenericErrorScreen(errorMessage = (state as QueuePlansState.Error).errorMessage) {
+            GenericErrorScreen(
+                modifier = modifier,
+                errorMessage = (state as QueuePlansState.Error).errorMessage) {
                 onNavigateBack()
             }
         }

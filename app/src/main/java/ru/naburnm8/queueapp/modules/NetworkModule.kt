@@ -25,6 +25,7 @@ import ru.naburnm8.queueapp.queueConsumer.queue.queuePlans.api.QueuePlansShortAp
 import ru.naburnm8.queueapp.queueConsumer.submissionRequests.api.SubmissionRequestsApi
 import ru.naburnm8.queueapp.queueOperator.discipline.api.DisciplineApi
 import ru.naburnm8.queueapp.queueOperator.metrics.api.StudentMetricsApi
+import ru.naburnm8.queueapp.queueOperator.queues.api.QueuesApi
 import ru.naburnm8.queueapp.queueOperator.queues.invitations.api.InvitationsApi
 import ru.naburnm8.queueapp.queueOperator.queues.queuePlans.api.QueuePlansApi
 import ru.naburnm8.queueapp.queueOperator.queues.queueRules.api.QueueRulesApi
@@ -152,6 +153,10 @@ val networkModule = module {
 
     single <QueuePlansShortApi> {
         get<Retrofit>(named("main_retrofit")).create(QueuePlansShortApi::class.java)
+    }
+
+    single <QueuesApi> {
+        get<Retrofit>(named("main_retrofit")).create(QueuesApi::class.java)
     }
 
 }
