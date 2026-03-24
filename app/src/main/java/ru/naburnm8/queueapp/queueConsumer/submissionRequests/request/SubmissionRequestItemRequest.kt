@@ -8,6 +8,6 @@ import java.util.UUID
 data class SubmissionRequestItemRequest(
     @Serializable(with = UUIDSerializer::class)
     val workTypeId: UUID,
-    val quantity: Int = 1,
+    val quantity: Int,
     val minutesOverride: Int? = null,
 )

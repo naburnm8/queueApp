@@ -91,7 +91,9 @@ fun SubmissionRequestsListScreen(
                 queuePlans = (state as SubmissionRequestsState.Main).queuePlans,
                 onRefresh = { vm.loadMyRequests() },
                 onEdit = { request ->
-
+                    vm.switchActiveRequest(request) {
+                        onNavigateToEdit()
+                    }
                 },
                 onCreate = { plan ->
                     vm.switchInputContext(plan) {

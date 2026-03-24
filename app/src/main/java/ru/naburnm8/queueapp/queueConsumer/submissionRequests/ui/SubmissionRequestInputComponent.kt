@@ -1,5 +1,6 @@
 package ru.naburnm8.queueapp.queueConsumer.submissionRequests.ui
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -301,6 +302,7 @@ fun SubmissionRequestsInputComponent(
                     (item.minutesOverride ?: item.minutesPerOne) * item.quantity
                 }
                 sliderActive = false
+                Log.d("SubmissionRequestInput", "Submitting with totalMinutes: $calculatedTotalMinutes, items: $items")
                 onSubmit(
                     SubmissionRequestEntity(
                         id = editing?.id,

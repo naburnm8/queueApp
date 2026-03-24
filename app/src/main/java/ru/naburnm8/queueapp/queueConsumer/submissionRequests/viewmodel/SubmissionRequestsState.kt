@@ -9,7 +9,7 @@ sealed class SubmissionRequestsState {
     data class Main(
         val requests: List<SubmissionRequestEntity>,
         val queuePlans: List<QueuePlanShortEntity>,
-        val activeRequest: SubmissionRequestEntity? = null,
+        var activeRequest: SubmissionRequestEntity? = null,
         val inputBundle: SubmissionRequestInputBundle? = null
     ) : SubmissionRequestsState()
 }

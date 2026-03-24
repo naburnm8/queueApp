@@ -30,6 +30,41 @@ class SubmissionRequestsViewmodel (
         loadMyRequests()
     }
 
+    fun updateMySubmissionRequest(req: SubmissionRequestEntity, onSuccess: () -> Unit) {
+        val currentState = _stateFlow.value
+        if (currentState !is SubmissionRequestsState.Main || currentState.inputBundle == null) {
+            return
+        }
+        _stateFlow.value = SubmissionRequestsState.Loading
+        viewModelScope.launch {
+            runCatching {
+                submissionRequestsRepository.updateMySubmissionRequest(
+                    currentState.inputBundle.queuePlan.id,
+                    SubmissionRequestsMapper.toRequest(req)
+                ).getOrThrow()
+                loadMyRequestsInner(onSuccess)
+            }.onFailure {
+                _stateFlow.value = SubmissionRequestsState.Error(it.message ?: "Unknown error")
+            }
+        }
+    }
+
+    fun switchActiveRequest(req: SubmissionRequestEntity, onSuccess: () -> Unit = {}) {
+        val currentState = _stateFlow.value
+        if (currentState !is SubmissionRequestsState.Main) {
+            return
+        }
+        viewModelScope.launch {
+            currentState.activeRequest = req
+            val queuePlan = currentState.queuePlans.firstOrNull { it.id == req.queuePlanId }
+            if (queuePlan == null) {
+                _stateFlow.value = SubmissionRequestsState.Error("Queue plan not found")
+                return@launch
+            }
+            switchInputContextInner(currentState, queuePlan, onSuccess)
+        }
+    }
+
     fun loadMyRequests(onSuccess: () -> Unit = {}) {
         _stateFlow.value = SubmissionRequestsState.Loading
         viewModelScope.launch {

@@ -55,7 +55,22 @@ fun NavGraphBuilder.submissionRequestsFlow (
                     navController.popBackStack()
                 }
             )
+        }
 
+        composable (SubmissionRequestsNavigation.EditSubmissionRequest.name){
+            val parentEntry = remember(it) {
+                navController.getBackStackEntry(QueueConsumerFlowNavigation.MyRequests.name)
+            }
+
+            val vm : SubmissionRequestsViewmodel = koinViewModel(viewModelStoreOwner = parentEntry)
+
+            SubmissionRequestEditScreen(
+                modifier = Modifier.fillMaxSize(),
+                vm = vm,
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
         }
     }
 }
