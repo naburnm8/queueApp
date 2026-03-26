@@ -1,5 +1,6 @@
 package ru.naburnm8.queueapp.queueOperator.queues.viewmodel
 
+import ru.naburnm8.queueapp.queueConsumer.submissionRequests.entity.SubmissionRequestEntity
 import ru.naburnm8.queueapp.queueOperator.queues.entity.QueueSnapshotEntity
 
 sealed class QueuesState {
@@ -7,6 +8,7 @@ sealed class QueuesState {
     data class Error(val errorMessage: String) : QueuesState()
 
     data class Main(
-        val queues: List<QueueSnapshotEntity>
+        val queues: List<QueueSnapshotEntity>,
+        val submissionRequestsToQueues: Map<QueueSnapshotEntity, List<SubmissionRequestEntity>>
     ) : QueuesState()
 }

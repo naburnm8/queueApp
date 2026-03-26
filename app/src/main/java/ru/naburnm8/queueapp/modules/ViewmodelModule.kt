@@ -13,6 +13,7 @@ import ru.naburnm8.queueapp.queueOperator.metrics.viewmodel.StudentMetricsViewmo
 import ru.naburnm8.queueapp.queueOperator.queues.invitations.viewmodel.InvitationsViewmodel
 import ru.naburnm8.queueapp.queueOperator.queues.queuePlans.viewmodel.QueuePlansViewmodel
 import ru.naburnm8.queueapp.queueOperator.queues.queueRules.viewmodel.QueueRulesViewmodel
+import ru.naburnm8.queueapp.queueOperator.queues.viewmodel.QueuesViewmodel
 import ru.naburnm8.queueapp.viewmodel.InterViewmodelBridge
 
 
@@ -96,6 +97,14 @@ val viewmodelModule = module {
             get(),
             get(),
             get()
+        )
+    }
+
+    viewModel {
+        QueuesViewmodel(
+            get(),
+            get(),
+            get(),
         )
     }
 }

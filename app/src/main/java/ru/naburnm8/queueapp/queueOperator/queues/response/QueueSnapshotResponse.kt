@@ -1,6 +1,7 @@
 package ru.naburnm8.queueapp.queueOperator.queues.response
 
 import kotlinx.serialization.Serializable
+import ru.naburnm8.queueapp.queueOperator.queues.queuePlans.request.QueueStatus
 import ru.naburnm8.queueapp.queueOperator.queues.queuePlans.serialization.InstantSerializer
 import ru.naburnm8.queueapp.serialization.UUIDSerializer
 import java.time.Instant
@@ -14,5 +15,6 @@ data class QueueSnapshotResponse (
     @Serializable(with = InstantSerializer::class)
     val generatedAt: Instant,
     val current: QueueEntryViewResponse?,
-    val entries: List<QueueEntryViewResponse>
+    val entries: List<QueueEntryViewResponse>,
+    val queueStatus: QueueStatus
 )

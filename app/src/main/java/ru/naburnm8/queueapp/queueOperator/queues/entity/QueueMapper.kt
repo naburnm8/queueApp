@@ -10,7 +10,8 @@ object QueueMapper {
             version = response.version,
             generatedAt = response.generatedAt,
             current = if (response.current != null) map(response.current) else null,
-            entries = response.entries.map { map(it) }
+            entries = response.entries.map { map(it) },
+            queueStatus = response.queueStatus
         )
     }
 
