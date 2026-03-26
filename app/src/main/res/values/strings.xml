@@ -132,4 +132,5 @@
     <string name="total_minutes">Total minutes</string>
     <string name="create_request">Create request</string>
     <string name="edit_request">Edit request</string>
+    <string name="empty">Empty</string>
 </resources>

@@ -21,6 +21,7 @@ val viewmodelModule = module {
     viewModel{
         NavigationViewmodel(
             get(),
+            get(),
             get()
         )
     }
@@ -105,6 +106,7 @@ val viewmodelModule = module {
             get(),
             get(),
             get(),
+            get()
         )
     }
 }

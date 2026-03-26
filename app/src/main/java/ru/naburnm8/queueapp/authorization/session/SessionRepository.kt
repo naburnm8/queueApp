@@ -5,7 +5,7 @@ import ru.naburnm8.queueapp.authorization.token.TokenStorage
 import ru.naburnm8.queueapp.util.JwtUtil
 
 class SessionRepository (
-    private val tokenStorage: TokenStorage
+    private val tokenStorage: TokenStorage,
 ) {
     suspend fun resolveSession(): SessionState {
         val accessToken = tokenStorage.getAccessToken()

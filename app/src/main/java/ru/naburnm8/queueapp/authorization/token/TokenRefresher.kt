@@ -4,4 +4,6 @@ import ru.naburnm8.queueapp.authorization.response.AuthorizationResponse
 
 interface TokenRefresher {
     fun refreshBlocking(refreshToken: String): AuthorizationResponse
+
+    suspend fun refresh(refreshToken: String): AuthorizationResponse
 }

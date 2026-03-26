@@ -11,10 +11,12 @@ import ru.naburnm8.queueapp.authorization.session.SessionRepository
 import ru.naburnm8.queueapp.authorization.session.SessionState
 import ru.naburnm8.queueapp.queueConsumer.navigation.QueueConsumerFlowNavigation
 import ru.naburnm8.queueapp.queueOperator.navigation.QueueOperatorFlowNavigation
+import ru.naburnm8.queueapp.websocket.QueueUpdatesManager
 
 class NavigationViewmodel(
     private val sessionManager: SessionManager,
-    private val sessionRepository: SessionRepository
+    private val sessionRepository: SessionRepository,
+    private val queueUpdatesManager: QueueUpdatesManager
 ) : ViewModel() {
     private val _stateFlow = MutableStateFlow<NavigationState>(NavigationState.Loading)
 
@@ -24,6 +26,7 @@ class NavigationViewmodel(
         viewModelScope.launch {
             sessionManager.logoutFlow.collect {
                 invalidateSession()
+                queueUpdatesManager.disconnect()
             }
         }
         viewModelScope.launch {
@@ -32,6 +35,7 @@ class NavigationViewmodel(
                     Role.ROLE_QCONSUMER -> authorizeAsQueueConsumer()
                     Role.ROLE_QOPERATOR -> authorizeAsQueueOperator()
                 }
+                queueUpdatesManager.connect()
             }
         }
         viewModelScope.launch {
@@ -39,6 +43,12 @@ class NavigationViewmodel(
                 is SessionState.Unauthorized -> NavigationState.Unauthorized
                 is SessionState.Teacher -> NavigationState.QueueOperator(QueueOperatorFlowNavigation.MyQueues)
                 is SessionState.Student -> NavigationState.QueueConsumer(QueueConsumerFlowNavigation.MyQueue)
+            }
+            queueUpdatesManager.connect()
+        }
+        viewModelScope.launch {
+            queueUpdatesManager.sessionExpired.collect {
+                sessionManager.refresh()
             }
         }
     }

@@ -403,6 +403,7 @@ private fun QueueStatus.toReadableText(): String {
         QueueStatus.DRAFT -> stringResource(R.string.draft)
         QueueStatus.ACTIVE -> stringResource(R.string.active)
         QueueStatus.CLOSED -> stringResource(R.string.closed)
+        QueueStatus.EMPTY -> stringResource(R.string.empty)
     }
 }
 

@@ -29,9 +29,11 @@ import ru.naburnm8.queueapp.queueOperator.queues.api.QueuesApi
 import ru.naburnm8.queueapp.queueOperator.queues.invitations.api.InvitationsApi
 import ru.naburnm8.queueapp.queueOperator.queues.queuePlans.api.QueuePlansApi
 import ru.naburnm8.queueapp.queueOperator.queues.queueRules.api.QueueRulesApi
+import ru.naburnm8.queueapp.websocket.QueueUpdatesManager
 import java.util.concurrent.TimeUnit
 
-private const val DEBUG_URL = "http://10.0.2.2:8081/"
+private const val DEBUG_SOCKET = "10.0.2.2:8081"
+private const val DEBUG_URL = "http://$DEBUG_SOCKET/"
 
 private val json = Json {
     ignoreUnknownKeys = true
@@ -94,6 +96,7 @@ val networkModule = module {
         SessionManager(
             tokenStorage = get(),
             authApi = get(),
+            get()
         )
     }
 
@@ -157,6 +160,13 @@ val networkModule = module {
 
     single <QueuesApi> {
         get<Retrofit>(named("main_retrofit")).create(QueuesApi::class.java)
+    }
+
+    single {
+        QueueUpdatesManager(
+            DEBUG_SOCKET,
+            get(),
+        )
     }
 
 }

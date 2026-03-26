@@ -22,6 +22,20 @@ class TokenRefresherImpl (
         return response.body() ?: throw IllegalStateException("Response body is null")
     }
 
+    override suspend fun refresh(refreshToken: String): AuthorizationResponse {
+        Log.d(TAG, "Attempting to refresh token")
+
+        val response = refreshApi.refresh(RefreshRequest(refreshToken))
+
+        if (!response.isSuccessful) {
+            Log.e(TAG, "Token refresh failed with code ${response.code()} and message ${response.message()}")
+            throw IllegalStateException("Refreshing token failed with code ${response.code()} and message ${response.message()}")
+        }
+
+        Log.d(TAG, "Token refresh successful")
+        return response.body() ?: throw IllegalStateException("Response body is null")
+    }
+
     companion object {
         private const val TAG = "TokenRefresherImpl"
     }

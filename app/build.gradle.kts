@@ -82,6 +82,10 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.2.0")
     implementation("com.google.crypto.tink:tink-android:1.7.0")
 
+    //stomp
+    implementation("com.github.NaikSoftware:StompProtocolAndroid:1.6.6")
+    implementation("io.reactivex.rxjava2:rxjava:2.2.21")
+
 
 
 }

@@ -1,5 +1,6 @@
 package ru.naburnm8.queueapp.queueOperator.queues.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,12 +20,14 @@ import ru.naburnm8.queueapp.queueOperator.queues.queuePlans.entity.QueuePlansMap
 import ru.naburnm8.queueapp.queueOperator.queues.queuePlans.repository.QueuePlansRepository
 import ru.naburnm8.queueapp.queueOperator.queues.queuePlans.request.QueueStatus
 import ru.naburnm8.queueapp.queueOperator.queues.repository.QueuesRepository
+import ru.naburnm8.queueapp.websocket.QueueUpdatesManager
 import java.util.UUID
 
 class QueuesViewmodel (
     private val queuePlansRepository: QueuePlansRepository,
     private val queuesRepository: QueuesRepository,
-    private val submissionRequestsRepository: SubmissionRequestsRepository
+    private val submissionRequestsRepository: SubmissionRequestsRepository,
+    private val queueUpdatesManager: QueueUpdatesManager,
 ) : ViewModel() {
 
     private val _stateFlow = MutableStateFlow<QueuesState>(QueuesState.Loading)
@@ -35,6 +38,12 @@ class QueuesViewmodel (
 
     init {
         loadQueues()
+
+        viewModelScope.launch {
+            queueUpdatesManager.updates.collect { event ->
+                reloadOneQueue(event.queueId)
+            }
+        }
     }
 
     fun loadQueues(onSuccess: () -> Unit = {}) {
@@ -110,6 +119,7 @@ class QueuesViewmodel (
 
     private suspend fun loadQueuesInner(onSuccess: () -> Unit = {}) {
         runCatching {
+            queueUpdatesManager.untrackAll()
             val myQueuePlanIds = queuePlansRepository
                 .getMyQueuePlans()
                 .getOrThrow()
@@ -128,11 +138,12 @@ class QueuesViewmodel (
 
                 requestsToQueues[mapped] = requests.map { SubmissionRequestsMapper.map(it) }
             }
-
             _stateFlow.value = QueuesState.Main(queues, requestsToQueues)
+            queueUpdatesManager.trackQueues(myQueuePlanIds)
             onSuccess()
         }.onFailure {
             _stateFlow.value = QueuesState.Error(it.message ?: "Unknown error")
+            Log.e("QueuesViewmodel", "Failed to load queues", it)
         }
     }
 

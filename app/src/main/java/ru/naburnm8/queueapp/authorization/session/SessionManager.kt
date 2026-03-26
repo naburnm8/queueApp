@@ -5,11 +5,13 @@ import kotlinx.coroutines.flow.asSharedFlow
 import ru.naburnm8.queueapp.authorization.api.AuthorizationApi
 import ru.naburnm8.queueapp.authorization.entity.Role
 import ru.naburnm8.queueapp.authorization.request.LogoutRequest
+import ru.naburnm8.queueapp.authorization.token.TokenRefresher
 import ru.naburnm8.queueapp.authorization.token.TokenStorage
 
 class SessionManager(
     private val tokenStorage: TokenStorage,
-    private val authApi: AuthorizationApi
+    private val authApi: AuthorizationApi,
+    private val tokenRefresher: TokenRefresher
 ) {
     private val _logoutFlow = MutableSharedFlow<Unit>()
     val logoutFlow = _logoutFlow.asSharedFlow()
@@ -37,6 +39,23 @@ class SessionManager(
     suspend fun initiateSession(accessToken: String, refreshToken: String, role: Role) {
         tokenStorage.saveTokens(accessToken, refreshToken)
         _loginFlow.emit(role)
+    }
+
+    suspend fun refresh() {
+        val refreshToken = tokenStorage.getRefreshToken()
+        if (refreshToken == null) {
+            closeSession()
+            return
+        }
+        runCatching {
+            val tokenPair = tokenRefresher.refresh(refreshToken)
+            tokenStorage.saveTokens(
+                accessToken = tokenPair.accessToken,
+                refreshToken = tokenPair.refreshToken
+            )
+        }.onFailure {
+            closeSession()
+        }
     }
 
 }
