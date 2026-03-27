@@ -1,9 +1,11 @@
 package ru.naburnm8.queueapp.queueOperator.queues.ui
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -31,14 +33,12 @@ fun NavGraphBuilder.queuesFlow(
 
             val queuesVm: QueuesViewmodel = koinViewModel(viewModelStoreOwner = parentEntry)
 
-            Column() {
-                Text ("My queues")
-                Button(
-                    onClick = {navController.navigate(QueuesNavigation.QueuePlans.name)}
-                ) {
-                    Text("Go to queue plans")
-                }
-            }
+            QueuesScreen(
+                modifier = Modifier.fillMaxSize(),
+                vm = queuesVm,
+                onNavigateToQueuePlans = {navController.navigate(QueuesNavigation.QueuePlans.name)},
+                onNavigateToQueue = {}
+            )
 
         }
 

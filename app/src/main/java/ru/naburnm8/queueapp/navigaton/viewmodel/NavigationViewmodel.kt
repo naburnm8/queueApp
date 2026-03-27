@@ -26,6 +26,7 @@ class NavigationViewmodel(
         viewModelScope.launch {
             sessionManager.logoutFlow.collect {
                 invalidateSession()
+                queueUpdatesManager.untrackAll()
                 queueUpdatesManager.disconnect()
             }
         }

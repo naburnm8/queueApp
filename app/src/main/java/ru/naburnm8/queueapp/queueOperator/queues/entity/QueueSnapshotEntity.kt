@@ -21,5 +21,13 @@ data class QueueSnapshotEntity(
             entries = emptyList(),
             queueStatus = QueueStatus.EMPTY
         )
+        val mockActive = QueueSnapshotEntity(
+            queuePlanId = UUID(1, 1),
+            version = 34,
+            generatedAt = Instant.now(),
+            current = null,
+            entries = emptyList(),
+            queueStatus = QueueStatus.ACTIVE
+        )
     }
 }

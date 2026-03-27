@@ -133,4 +133,10 @@
     <string name="create_request">Create request</string>
     <string name="edit_request">Edit request</string>
     <string name="empty">Empty</string>
+    <string name="you_have_no_queues">You have no queues. Create one.</string>
+    <string name="change_status">Change status</string>
+    <string name="change_status_affirmation">Are you sure you want to change this queue\'s status</string>
+    <string name="from">from</string>
+    <string name="to">to</string>
+    <string name="enqueued">Enqueued</string>
 </resources>

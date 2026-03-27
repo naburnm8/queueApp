@@ -56,6 +56,7 @@ import ru.naburnm8.queueapp.R
 import ru.naburnm8.queueapp.queueOperator.discipline.entity.DisciplineEntity
 import ru.naburnm8.queueapp.queueOperator.queues.queuePlans.entity.QueuePlanEntity
 import ru.naburnm8.queueapp.queueOperator.queues.queuePlans.request.QueueStatus
+import ru.naburnm8.queueapp.queueOperator.queues.queuePlans.request.toReadableText
 import ru.naburnm8.queueapp.queueOperator.queues.queuePlans.viewmodel.QueuePlansState
 import ru.naburnm8.queueapp.queueOperator.queues.queuePlans.viewmodel.QueuePlansViewmodel
 import ru.naburnm8.queueapp.ui.screen.GenericErrorScreen
@@ -397,15 +398,7 @@ private fun QueuePlanItem(
         }
     }
 }
-@Composable
-private fun QueueStatus.toReadableText(): String {
-    return when (this) {
-        QueueStatus.DRAFT -> stringResource(R.string.draft)
-        QueueStatus.ACTIVE -> stringResource(R.string.active)
-        QueueStatus.CLOSED -> stringResource(R.string.closed)
-        QueueStatus.EMPTY -> stringResource(R.string.empty)
-    }
-}
+
 
 private fun formatPlanCreatedAt(createdAt: java.time.Instant): String {
     val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")

@@ -20,7 +20,7 @@ data class QueuePlanEntity(
 ) {
     companion object {
         val mock = QueuePlanEntity(
-            id = UUID.randomUUID(),
+            id = UUID(1,1),
             createdByTeacherId = UUID.randomUUID(),
             title = "План очереди 1",
             status = QueueStatus.ACTIVE,

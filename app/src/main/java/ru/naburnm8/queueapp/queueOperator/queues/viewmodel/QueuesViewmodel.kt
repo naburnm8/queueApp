@@ -68,6 +68,8 @@ class QueuesViewmodel (
                     .getOrThrow()
                     .map { SubmissionRequestsMapper.map(it) }
 
+                val newQueuePlan = queuePlansRepository.getQueuePlanById(queueId).getOrThrow()
+
                 stateMutex.withLock {
                     val currentState = _stateFlow.value
                     if (currentState !is QueuesState.Main) {
@@ -78,11 +80,15 @@ class QueuesViewmodel (
                     newList.removeIf { it.queuePlanId == queueId }
                     newList.add(mapped)
 
+                    val newQueuePlansList = currentState.queuePlans.toMutableList()
+                    newQueuePlansList.removeIf { it.id == queueId }
+                    newQueuePlansList.add(QueuePlansMapper.map(newQueuePlan))
+
                     val newMap = currentState.submissionRequestsToQueues.toMutableMap()
                     newMap.keys.removeIf { it.queuePlanId == queueId }
                     newMap[mapped] = newRequests
 
-                    _stateFlow.value = QueuesState.Main(newList, newMap)
+                    _stateFlow.value = QueuesState.Main(newList, newQueuePlansList, newMap)
                 }
                 onSuccess()
             }.onFailure {
@@ -96,7 +102,6 @@ class QueuesViewmodel (
         if (currentState !is QueuesState.Main) {
             return
         }
-        _stateFlow.value = QueuesState.Loading
         viewModelScope.launch {
             runCatching {
                 val queue = currentState.queues.find {it.queuePlanId == queueId}
@@ -106,6 +111,8 @@ class QueuesViewmodel (
                 if (queue.queueStatus == QueueStatus.ACTIVE) {
                     queuePlansRepository.close(queueId).getOrThrow()
                 } else if (queue.queueStatus == QueueStatus.DRAFT) {
+                    queuePlansRepository.activate(queueId).getOrThrow()
+                } else if (queue.queueStatus == QueueStatus.CLOSED) {
                     queuePlansRepository.activate(queueId).getOrThrow()
                 }
                 if (forceReload) {
@@ -120,10 +127,12 @@ class QueuesViewmodel (
     private suspend fun loadQueuesInner(onSuccess: () -> Unit = {}) {
         runCatching {
             queueUpdatesManager.untrackAll()
-            val myQueuePlanIds = queuePlansRepository
+            val myQueuePlans = queuePlansRepository
                 .getMyQueuePlans()
                 .getOrThrow()
-                .map {it.id!!}
+
+
+            val myQueuePlanIds = myQueuePlans.map{it.id!!}
 
             val queues = mutableListOf<QueueSnapshotEntity>()
             val requestsToQueues: MutableMap<QueueSnapshotEntity, List<SubmissionRequestEntity>> = mutableMapOf()
@@ -138,7 +147,10 @@ class QueuesViewmodel (
 
                 requestsToQueues[mapped] = requests.map { SubmissionRequestsMapper.map(it) }
             }
-            _stateFlow.value = QueuesState.Main(queues, requestsToQueues)
+            _stateFlow.value = QueuesState.Main(
+                queues,
+                myQueuePlans.map { QueuePlansMapper.map(it)},
+                requestsToQueues)
             queueUpdatesManager.trackQueues(myQueuePlanIds)
             onSuccess()
         }.onFailure {
