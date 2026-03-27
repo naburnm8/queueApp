@@ -4,6 +4,7 @@ import ru.naburnm8.queueapp.queueConsumer.submissionRequests.request.SubmissionR
 import ru.naburnm8.queueapp.queueConsumer.submissionRequests.request.SubmissionRequestRequest
 import ru.naburnm8.queueapp.queueConsumer.submissionRequests.response.SubmissionRequestItemResponse
 import ru.naburnm8.queueapp.queueConsumer.submissionRequests.response.SubmissionRequestResponse
+import ru.naburnm8.queueapp.queueConsumer.submissionRequests.response.SubmissionRequestShortResponse
 
 object SubmissionRequestsMapper {
     fun map(response: SubmissionRequestItemResponse): SubmissionRequestItemEntity {
@@ -13,6 +14,18 @@ object SubmissionRequestsMapper {
             minutesPerOne = response.minutesPerOne,
             quantity = response.quantity,
             minutesOverride = response.minutesOverride
+        )
+    }
+
+    fun map(response: SubmissionRequestShortResponse): SubmissionRequestShortEntity {
+        return SubmissionRequestShortEntity(
+            id = response.id,
+            queuePlanId = response.queuePlanId,
+            studentId = response.studentId,
+            studentName = response.studentName,
+            avatarUrl = response.avatarUrl,
+            status = response.status,
+            totalMinutes = response.totalMinutes
         )
     }
 

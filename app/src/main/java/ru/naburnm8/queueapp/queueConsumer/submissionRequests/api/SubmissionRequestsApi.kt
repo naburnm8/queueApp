@@ -10,6 +10,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 import ru.naburnm8.queueapp.queueConsumer.submissionRequests.request.SubmissionRequestRequest
 import ru.naburnm8.queueapp.queueConsumer.submissionRequests.response.SubmissionRequestResponse
+import ru.naburnm8.queueapp.queueConsumer.submissionRequests.response.SubmissionRequestShortResponse
 import ru.naburnm8.queueapp.queueConsumer.submissionRequests.response.SubmissionStatus
 import java.util.UUID
 
@@ -57,5 +58,9 @@ interface SubmissionRequestsApi {
         @Path("requestId") requestId: UUID,
         @Query("status") status: SubmissionStatus
     ) : Response<Unit>
+
+
+    @GET("$URI_BASE/{queuePlanId}/requests/short")
+    suspend fun getAllSubmissionRequestsShort(@Path("queuePlanId") queuePlanId: UUID): Response<List<SubmissionRequestShortResponse>>
 
 }

@@ -360,7 +360,8 @@ fun QueueListItem(
                     tint = MaterialTheme.colorScheme.onTertiaryContainer
                 )
             }
-        }
+        },
+        enableDismissFromStartToEnd = false
     ) {
         Row(
             modifier = Modifier

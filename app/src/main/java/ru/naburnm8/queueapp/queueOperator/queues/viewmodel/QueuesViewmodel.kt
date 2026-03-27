@@ -1,6 +1,7 @@
 package ru.naburnm8.queueapp.queueOperator.queues.viewmodel
 
 import android.util.Log
+import androidx.compose.ui.res.integerResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,6 +11,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import ru.naburnm8.queueapp.profile.repository.ProfileRepository
 import ru.naburnm8.queueapp.queueConsumer.submissionRequests.entity.SubmissionRequestEntity
+import ru.naburnm8.queueapp.queueConsumer.submissionRequests.entity.SubmissionRequestShortEntity
 import ru.naburnm8.queueapp.queueConsumer.submissionRequests.entity.SubmissionRequestsMapper
 import ru.naburnm8.queueapp.queueConsumer.submissionRequests.repository.SubmissionRequestsRepository
 import ru.naburnm8.queueapp.queueConsumer.submissionRequests.response.SubmissionStatus
@@ -46,6 +48,123 @@ class QueuesViewmodel (
         }
     }
 
+
+    fun approveRequest(
+        queueId: UUID,
+        requestId: UUID,
+        forceReload: Boolean = false,
+        onSuccess: () -> Unit = {}
+    ) {
+        Log.d("QueuesViewmodel", "Approving request $requestId in queue $queueId")
+        changeStatusOfRequest(queueId, requestId, SubmissionStatus.ENQUEUED, forceReload, onSuccess)
+    }
+
+    fun rejectRequest(
+        queueId: UUID,
+        requestId: UUID,
+        forceReload: Boolean = false,
+        onSuccess: () -> Unit = {}
+    ) {
+        Log.d("QueuesViewmodel", "Rejecting request $requestId in queue $queueId")
+        changeStatusOfRequest(queueId, requestId, SubmissionStatus.REJECTED, forceReload, onSuccess)
+    }
+
+    private fun changeStatusOfRequest(
+        queueId: UUID,
+        requestId: UUID,
+        status: SubmissionStatus,
+        forceReload: Boolean = false,
+        onSuccess: () -> Unit = {}
+    ) {
+        val currentState = _stateFlow.value
+        if (currentState !is QueuesState.Main) {
+            return
+        }
+        viewModelScope.launch {
+            Log.d("QueuesViewmodel", "Looking for: $queueId")
+            val thisQueue = currentState.queues.find { it.queuePlanId == queueId } ?: return@launch
+            Log.d("QueuesViewmodel", "Found: ${thisQueue.queuePlanId}")
+            runCatching {
+                Log.d("QueuesViewmodel", "Updating: $queueId; $requestId; $status")
+                submissionRequestsRepository.updateSubmissionRequestStatus(queueId, requestId, status).getOrThrow()
+                if (forceReload) {
+                    reloadOneQueue(queueId, onSuccess)
+                    return@launch
+                }
+                onSuccess()
+            }.onFailure {
+                _stateFlow.value = QueuesState.Error(it.message ?: "Unknown error")
+            }
+        }
+    }
+
+
+
+    fun remove(queueId: UUID, requestId: UUID, forceReload: Boolean = false, onSuccess: () -> Unit = {}) {
+        val currentState = _stateFlow.value
+        if (currentState !is QueuesState.Main) {
+            return
+        }
+        viewModelScope.launch {
+            val thisQueue = currentState.queues.find { it.queuePlanId == queueId } ?: return@launch
+            runCatching {
+                val requestId = thisQueue.entries.find {it.requestId == requestId}?.requestId ?: return@runCatching
+                submissionRequestsRepository.updateSubmissionRequestStatus(queueId, requestId, SubmissionStatus.DEQUEUED).getOrThrow()
+                if (forceReload) {
+                    reloadOneQueue(queueId, onSuccess)
+                    return@launch
+                }
+                onSuccess()
+            }.onFailure {
+                _stateFlow.value = QueuesState.Error(it.message ?: "Unknown error")
+            }
+        }
+
+    }
+    fun take(queueId: UUID, requestId: UUID, forceReload: Boolean = false, onSuccess: () -> Unit = {}) {
+        val currentState = _stateFlow.value
+        if (currentState !is QueuesState.Main) {
+            return
+        }
+        viewModelScope.launch {
+            runCatching {
+                queuesRepository.take(queueId, requestId).getOrThrow()
+                if (forceReload) {
+                    reloadOneQueue(queueId, onSuccess)
+                    return@launch
+                }
+                onSuccess()
+            }.onFailure {
+                _stateFlow.value = QueuesState.Error(it.message ?: "Unknown error")
+            }
+        }
+    }
+
+
+    fun takeNext(queueId: UUID, forceReload: Boolean = false, onSuccess: () -> Unit = {}) {
+        val currentState = _stateFlow.value
+        if (currentState !is QueuesState.Main) {
+            return
+        }
+
+        viewModelScope.launch {
+            val thisQueue = currentState.queues.find { it.queuePlanId == queueId } ?: return@launch
+            if (thisQueue.entries.isEmpty()) {
+                return@launch
+            }
+            runCatching {
+                queuesRepository.takeNext(queueId).getOrThrow()
+                if (forceReload) {
+                    reloadOneQueue(queueId, onSuccess)
+                    return@launch
+                }
+                onSuccess()
+            }.onFailure {
+                _stateFlow.value = QueuesState.Error(it.message ?: "Unknown error")
+            }
+        }
+    }
+
     fun loadQueues(onSuccess: () -> Unit = {}) {
         _stateFlow.value = QueuesState.Loading
         viewModelScope.launch {
@@ -64,9 +183,10 @@ class QueuesViewmodel (
                 val mapped = QueueMapper.map(newQueue)
 
                 val newRequests = submissionRequestsRepository
-                    .getAllSubmissionRequests(queueId)
+                    .getAllSubmissionRequestsShort(queueId)
                     .getOrThrow()
                     .map { SubmissionRequestsMapper.map(it) }
+                    .filter { it.status == SubmissionStatus.PENDING }
 
                 val newQueuePlan = queuePlansRepository.getQueuePlanById(queueId).getOrThrow()
 
@@ -135,15 +255,15 @@ class QueuesViewmodel (
             val myQueuePlanIds = myQueuePlans.map{it.id!!}
 
             val queues = mutableListOf<QueueSnapshotEntity>()
-            val requestsToQueues: MutableMap<QueueSnapshotEntity, List<SubmissionRequestEntity>> = mutableMapOf()
+            val requestsToQueues: MutableMap<QueueSnapshotEntity, List<SubmissionRequestShortEntity>> = mutableMapOf()
             for (id in myQueuePlanIds) {
                 val queueSnapshot = queuesRepository.view(id).getOrThrow()
                 val mapped = QueueMapper.map(queueSnapshot)
                 queues.add(mapped)
                 val requests = submissionRequestsRepository
-                    .getAllSubmissionRequests(id)
+                    .getAllSubmissionRequestsShort(id)
                     .getOrThrow()
-                    .filter { it.status != SubmissionStatus.ENQUEUED }
+                    .filter { it.status == SubmissionStatus.PENDING }
 
                 requestsToQueues[mapped] = requests.map { SubmissionRequestsMapper.map(it) }
             }

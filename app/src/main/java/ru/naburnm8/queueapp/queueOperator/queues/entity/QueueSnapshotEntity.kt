@@ -25,8 +25,8 @@ data class QueueSnapshotEntity(
             queuePlanId = UUID(1, 1),
             version = 34,
             generatedAt = Instant.now(),
-            current = null,
-            entries = emptyList(),
+            current = QueueEntryViewEntity.mockHead,
+            entries = QueueEntryViewEntity.mockList,
             queueStatus = QueueStatus.ACTIVE
         )
     }

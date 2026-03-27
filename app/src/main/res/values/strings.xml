@@ -139,4 +139,12 @@
     <string name="from">from</string>
     <string name="to">to</string>
     <string name="enqueued">Enqueued</string>
+    <string name="take_next">Take next</string>
+    <string name="remove_from_queue_affirmation">Are you sure you want to remove this from the queue?</string>
+    <string name="current_queue_head">Current queue head</string>
+    <string name="no_queue_head">No queue head yet</string>
+    <string name="queue">Queue</string>
+    <string name="queue_is_empty">Queue is empty</string>
+    <string name="take_into_queue_affirmation">Are you sure you want to move this request to queue head?</string>
+    <string name="pending_requests">Pending requests</string>
 </resources>

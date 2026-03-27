@@ -20,7 +20,13 @@ interface QueuesApi {
     ) : Response<QueueSnapshotResponse>
 
     @POST("$URI_BASE/{queuePlanId}/takeNext")
-    suspend fun takeNext(queuePlanId: UUID) : Response<Unit>
+    suspend fun takeNext(@Path("queuePlanId") queuePlanId: UUID) : Response<Unit>
+
+    @POST("$URI_BASE/{queuePlanId}/take/{requestId}")
+    suspend fun take(
+        @Path("queuePlanId") queuePlanId: UUID,
+        @Path("requestId") requestId: UUID
+    ) : Response<Unit>
 
 
 }

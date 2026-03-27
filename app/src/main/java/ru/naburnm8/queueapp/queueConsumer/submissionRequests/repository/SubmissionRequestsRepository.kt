@@ -5,6 +5,7 @@ import retrofit2.Response
 import ru.naburnm8.queueapp.queueConsumer.submissionRequests.api.SubmissionRequestsApi
 import ru.naburnm8.queueapp.queueConsumer.submissionRequests.request.SubmissionRequestRequest
 import ru.naburnm8.queueapp.queueConsumer.submissionRequests.response.SubmissionRequestResponse
+import ru.naburnm8.queueapp.queueConsumer.submissionRequests.response.SubmissionRequestShortResponse
 import ru.naburnm8.queueapp.queueConsumer.submissionRequests.response.SubmissionStatus
 import java.util.UUID
 
@@ -65,6 +66,10 @@ class SubmissionRequestsRepository (
     ) : Result<List<SubmissionRequestResponse>> {
         val response = api.getAllSubmissionRequests(queuePlanId, status)
         return returnResult(response)
+    }
+
+    suspend fun getAllSubmissionRequestsShort(queueId: UUID) : Result<List<SubmissionRequestShortResponse>> {
+        return returnResult(api.getAllSubmissionRequestsShort(queueId))
     }
 
     suspend fun updateSubmissionRequestStatus(

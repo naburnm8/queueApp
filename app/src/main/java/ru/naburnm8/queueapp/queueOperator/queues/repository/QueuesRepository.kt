@@ -27,4 +27,8 @@ class QueuesRepository (
     suspend fun takeNext(queuePlanId: UUID): Result<Unit> {
         return returnResult(queuesApi.takeNext(queuePlanId))
     }
+
+    suspend fun take(queuePlanId: UUID, requestId: UUID): Result<Unit> {
+        return returnResult(queuesApi.take(queuePlanId, requestId))
+    }
 }
