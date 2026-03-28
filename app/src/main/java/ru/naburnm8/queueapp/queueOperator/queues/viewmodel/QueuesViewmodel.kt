@@ -173,10 +173,6 @@ class QueuesViewmodel (
     }
 
     fun reloadOneQueue(queueId: UUID, onSuccess: () -> Unit = {}) {
-        val currentState = _stateFlow.value
-        if (currentState !is QueuesState.Main) {
-            return
-        }
         viewModelScope.launch {
             runCatching {
                 val newQueue = queuesRepository.view(queueId).getOrThrow()
@@ -209,8 +205,8 @@ class QueuesViewmodel (
                     newMap[mapped] = newRequests
 
                     _stateFlow.value = QueuesState.Main(newList, newQueuePlansList, newMap)
+                    onSuccess()
                 }
-                onSuccess()
             }.onFailure {
                 _stateFlow.value = QueuesState.Error(it.message ?: "Unknown error")
             }

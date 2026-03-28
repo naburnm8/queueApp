@@ -56,6 +56,7 @@ import ru.naburnm8.queueapp.R
 import ru.naburnm8.queueapp.queueConsumer.queue.queuePlans.entity.QueuePlanShortEntity
 import ru.naburnm8.queueapp.queueConsumer.submissionRequests.entity.SubmissionRequestEntity
 import ru.naburnm8.queueapp.queueConsumer.submissionRequests.response.SubmissionStatus
+import ru.naburnm8.queueapp.queueConsumer.submissionRequests.response.toReadableText
 import ru.naburnm8.queueapp.queueConsumer.submissionRequests.viewmodel.SubmissionRequestsState
 import ru.naburnm8.queueapp.queueConsumer.submissionRequests.viewmodel.SubmissionRequestsViewmodel
 import ru.naburnm8.queueapp.ui.screen.GenericDeleteDialog
@@ -429,12 +430,3 @@ private fun SubmissionRequestItem (
     }
 }
 
-@Composable
-private fun SubmissionStatus.toReadableText() : String {
-    return when(this) {
-        SubmissionStatus.PENDING -> stringResource(R.string.status_pending).toLowerCase(Locale.current)
-        SubmissionStatus.ENQUEUED -> stringResource(R.string.status_enqueued).toLowerCase(Locale.current)
-        SubmissionStatus.REJECTED -> stringResource(R.string.status_rejected).toLowerCase(Locale.current)
-        SubmissionStatus.DEQUEUED -> stringResource(R.string.status_dequeued).toLowerCase(Locale.current)
-    }
-}

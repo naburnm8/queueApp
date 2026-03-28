@@ -12,6 +12,12 @@ data class QueuePlanShortEntity(
     val status: QueueStatus,
     val teacher: ProfileEntity,
     val slotDurationMinutes: Int,
+    val useTime: Boolean,
+    val wTime: Double,
+    val useDebts: Boolean,
+    val wDebts: Double,
+    val useAchievements: Boolean,
+    val wAchievements: Double
 ) {
     companion object {
         val mock = QueuePlanShortEntity(
@@ -21,6 +27,12 @@ data class QueuePlanShortEntity(
             status = QueueStatus.ACTIVE,
             teacher = ProfileEntity.teacherMock,
             slotDurationMinutes = 15,
+            useTime = true,
+            wTime = 0.5,
+            useDebts = true,
+            wDebts = 0.3,
+            useAchievements = true,
+            wAchievements = 0.2
         )
     }
 }

@@ -4,6 +4,7 @@ import okio.IOException
 import retrofit2.Response
 import ru.naburnm8.queueapp.queueConsumer.queue.queuePlans.api.QueuePlansShortApi
 import ru.naburnm8.queueapp.queueConsumer.queue.queuePlans.response.QueuePlanShortResponse
+import java.util.UUID
 
 class QueuePlansShortRepository (
     private val api: QueuePlansShortApi
@@ -21,6 +22,11 @@ class QueuePlansShortRepository (
 
     suspend fun getAllQueuePlans() : Result<List<QueuePlanShortResponse>> {
         val response = api.getQueuePlans()
+        return returnResult(response)
+    }
+
+    suspend fun getShortQueuePlan(queuePlanId: UUID) : Result<QueuePlanShortResponse> {
+        val response = api.getShortQueuePlan(queuePlanId)
         return returnResult(response)
     }
 }

@@ -12,7 +12,13 @@ object QueuePlanShortMapper {
             discipline = DisciplinesMapper.map(response.discipline),
             status = response.status,
             teacher = ProfileMapper.map(response.teacher),
-            slotDurationMinutes = response.slotDurationMinutes
+            slotDurationMinutes = response.slotDurationMinutes,
+            useTime = response.useTime,
+            wTime = response.wTime,
+            useDebts = response.useDebts,
+            wDebts = response.wDebts,
+            useAchievements = response.useAchievements,
+            wAchievements = response.wAchievements
         )
     }
 }

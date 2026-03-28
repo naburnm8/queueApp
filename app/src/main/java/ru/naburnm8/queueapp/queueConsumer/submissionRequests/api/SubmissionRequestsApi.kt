@@ -19,6 +19,9 @@ interface SubmissionRequestsApi {
         const val URI_BASE = "/api/queuePlans"
     }
 
+    @POST("$URI_BASE/{queuePlanId}/requests/my/leave")
+    suspend fun leaveQueue(@Path("queuePlanId") queuePlanId: UUID) : Response<Unit>
+
     @GET("$URI_BASE/requests/my")
     suspend fun getAllMySubmissionRequests(
 

@@ -80,4 +80,9 @@ class SubmissionRequestsRepository (
         val response = api.updateSubmissionRequestStatus(queuePlanId, requestId, status)
         return returnResult(response)
     }
+
+     suspend fun leaveQueue(queuePlanId: UUID) : Result<Unit> {
+        val response = api.leaveQueue(queuePlanId)
+        return returnResult(response)
+    }
 }
