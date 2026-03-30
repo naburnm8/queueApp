@@ -29,7 +29,6 @@ fun QueueRuleInputComponent(
 
         is QueueRulesState.Main.GroupBonus -> {
             if (state.queuePlan.id == null) {
-                onNavigateBack()
                 return
             }
 
@@ -44,7 +43,6 @@ fun QueueRuleInputComponent(
 
         is QueueRulesState.Main.IdentifierBonus -> {
             if (state.queuePlan.id == null) {
-                onNavigateBack()
                 return
             }
 

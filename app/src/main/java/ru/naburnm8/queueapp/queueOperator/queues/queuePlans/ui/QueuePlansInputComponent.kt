@@ -27,6 +27,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -40,6 +41,7 @@ import ru.naburnm8.queueapp.R
 import ru.naburnm8.queueapp.authorization.ui.main.SlideToConfirm
 import ru.naburnm8.queueapp.queueOperator.queues.queuePlans.entity.QueuePlanEntity
 import ru.naburnm8.queueapp.queueOperator.queues.queuePlans.item.QueuePlanItem
+import ru.naburnm8.queueapp.ui.ImportancePickerComponent
 import ru.naburnm8.queueapp.ui.theme.QueueAppTheme
 
 @Composable
@@ -53,13 +55,13 @@ fun QueuePlansInputComponent(
     var slotDurationMinutes by remember { mutableStateOf(item?.slotDurationMinutes?.toString() ?: "") }
 
     var useDebts by remember { mutableStateOf(item?.useDebts ?: false) }
-    var wDebts by remember { mutableStateOf(item?.wDebts?.toString() ?: "") }
+    var wDebts by remember { mutableFloatStateOf(item?.wDebts?.toFloat() ?: 0.5f) }
 
     var useTime by remember { mutableStateOf(item?.useTime ?: false) }
-    var wTime by remember { mutableStateOf(item?.wTime?.toString() ?: "") }
+    var wTime by remember { mutableFloatStateOf(item?.wTime?.toFloat() ?: 0.5f) }
 
     var useAchievements by remember { mutableStateOf(item?.useAchievements ?: false) }
-    var wAchievements by remember { mutableStateOf(item?.wAchievements?.toString() ?: "") }
+    var wAchievements by remember { mutableFloatStateOf(item?.wAchievements?.toFloat() ?: 0.5f ) }
 
     var titleError by remember { mutableStateOf(false) }
     var slotDurationError by remember { mutableStateOf(false) }
@@ -135,16 +137,10 @@ fun QueuePlansInputComponent(
             weight = wDebts,
             onEnabledChange = {
                 useDebts = it
-                if (!it) {
-                    wDebts = ""
-                    debtsWeightError = false
-                }
             },
             onWeightChange = {
-                debtsWeightError = checkNotInBoundaries(it)
-                wDebts = filterDoubleInput(it)
+                wDebts = it
             },
-            isError = debtsWeightError,
             icon = {
                 Icon(
                     imageVector = Icons.Default.Info,
@@ -164,10 +160,8 @@ fun QueuePlansInputComponent(
                 timeWeightError = false
             },
             onWeightChange = {
-                timeWeightError = checkNotInBoundaries(it)
-                wTime = filterDoubleInput(it)
+                wTime = it
             },
-            isError = timeWeightError,
             icon = {
                 Icon(
                     imageVector = Icons.Default.Info,
@@ -187,10 +181,8 @@ fun QueuePlansInputComponent(
                 achievementsWeightError = false
             },
             onWeightChange = {
-                achievementsWeightError = checkNotInBoundaries(it)
-                wAchievements = filterDoubleInput(it)
+                wAchievements = it
             },
-            isError = achievementsWeightError,
             icon = {
                 Icon(
                     imageVector = Icons.Default.Star,
@@ -213,11 +205,11 @@ fun QueuePlansInputComponent(
                     id = item?.id,
                     title = title,
                     useDebts = useDebts,
-                    wDebts = wDebts.toDoubleOrNull() ?: 0.0,
+                    wDebts = wDebts.toDouble(),
                     useTime = useTime,
-                    wTime = wTime.toDoubleOrNull() ?: 0.0,
+                    wTime = wTime.toDouble(),
                     useAchievements = useAchievements,
-                    wAchievements = wAchievements.toDoubleOrNull() ?: 0.0,
+                    wAchievements = wAchievements.toDouble(),
                     slotDurationMinutes = slotDurationMinutes.toIntOrNull() ?: 0
                 )
                 onConfirm(newObject)
@@ -245,10 +237,9 @@ fun QueuePlansInputComponentPreview() {
 private fun QueuePlanCriterionInput(
     title: String,
     enabled: Boolean,
-    weight: String,
+    weight: Float,
     onEnabledChange: (Boolean) -> Unit,
-    onWeightChange: (String) -> Unit,
-    isError: Boolean,
+    onWeightChange: (Float) -> Unit,
     icon: @Composable () -> Unit
 ) {
     Card(
@@ -286,15 +277,9 @@ private fun QueuePlanCriterionInput(
             if (enabled) {
                 Spacer(modifier = Modifier.height(12.dp))
 
-                OutlinedTextField(
+                ImportancePickerComponent(
                     value = weight,
                     onValueChange = onWeightChange,
-                    label = { Text(stringResource(R.string.weight)) },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true,
-                    enabled = true,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                    isError = isError
                 )
             }
         }

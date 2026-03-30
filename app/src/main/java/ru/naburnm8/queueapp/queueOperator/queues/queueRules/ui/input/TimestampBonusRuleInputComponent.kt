@@ -28,6 +28,7 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -45,6 +46,7 @@ import ru.naburnm8.queueapp.authorization.ui.main.SlideToConfirm
 import ru.naburnm8.queueapp.queueOperator.queues.queueRules.body.TimestampBonusRuleBody
 import ru.naburnm8.queueapp.queueOperator.queues.queueRules.entity.QueueRuleEntity
 import ru.naburnm8.queueapp.queueOperator.queues.queueRules.entity.RuleType
+import ru.naburnm8.queueapp.ui.ImportancePickerComponent
 import ru.naburnm8.queueapp.ui.checkNotInBoundaries
 import ru.naburnm8.queueapp.ui.filterDoubleInput
 import ru.naburnm8.queueapp.ui.theme.QueueAppTheme
@@ -90,7 +92,7 @@ fun TimestampBonusRuleInputComponent(
         mutableStateOf(initialBody?.end)
     }
     var bonus by remember {
-        mutableStateOf(initialBody?.bonus?.toString() ?: "")
+        mutableFloatStateOf(initialBody?.bonus?.toFloat() ?: 0.5f)
     }
     var enabled by remember {
         mutableStateOf(editingRule?.enabled ?: true)
@@ -189,17 +191,10 @@ fun TimestampBonusRuleInputComponent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        OutlinedTextField(
+        ImportancePickerComponent(
             value = bonus,
-            onValueChange = {
-                bonus = filterDoubleInput(it)
-                bonusError = checkNotInBoundaries(bonus)
-            },
-            modifier = Modifier.fillMaxWidth(),
-            label = { Text(stringResource(R.string.bonus)) },
-            singleLine = true,
-            isError = bonusError,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
+            onValueChange = {bonus = it},
+            text = stringResource(R.string.bonus)
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -208,17 +203,16 @@ fun TimestampBonusRuleInputComponent(
             text = stringResource(R.string.slide_to_confirm),
             enabled = sliderActive
         ) {
-            val parsedBonus = bonus.toDoubleOrNull()
+            val parsedBonus = bonus.toDouble()
 
             beginError = begin == null
             endError = end == null || (begin != null && end != null && end!! <= begin!!)
-            bonusError = parsedBonus == null || parsedBonus !in 0.0..1.0
 
-            if (!beginError && !endError && !bonusError) {
+            if (!beginError && !endError) {
                 val body = TimestampBonusRuleBody(
                     begin = begin!!,
                     end = end!!,
-                    bonus = parsedBonus!!
+                    bonus = parsedBonus
                 )
 
                 sliderActive = false

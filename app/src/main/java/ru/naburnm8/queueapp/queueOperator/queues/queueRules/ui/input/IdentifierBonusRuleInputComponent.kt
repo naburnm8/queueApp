@@ -31,6 +31,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -51,6 +52,7 @@ import ru.naburnm8.queueapp.queueOperator.queues.queueRules.body.IdentifierBonus
 import ru.naburnm8.queueapp.queueOperator.queues.queueRules.body.IdentifierField
 import ru.naburnm8.queueapp.queueOperator.queues.queueRules.entity.QueueRuleEntity
 import ru.naburnm8.queueapp.queueOperator.queues.queueRules.entity.RuleType
+import ru.naburnm8.queueapp.ui.ImportancePickerComponent
 import ru.naburnm8.queueapp.ui.checkNotInBoundaries
 import ru.naburnm8.queueapp.ui.filterDoubleInput
 import java.util.UUID
@@ -78,7 +80,7 @@ fun IdentifierBonusRuleInputComponent (
     }
     var selectedStudents by remember { mutableStateOf(listOf<ProfileEntity>()) }
     var bonus by remember {
-        mutableStateOf(initialBody?.bonus?.toString() ?: "")
+        mutableFloatStateOf(initialBody?.bonus?.toFloat() ?: 0.5f)
     }
     var enabled by remember {
         mutableStateOf(editingRule?.enabled ?: true)
@@ -194,17 +196,10 @@ fun IdentifierBonusRuleInputComponent (
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        OutlinedTextField(
+        ImportancePickerComponent(
             value = bonus,
-            onValueChange = {
-                bonus = filterDoubleInput(it)
-                bonusError = checkNotInBoundaries(bonus)
-            },
-            modifier = Modifier.fillMaxWidth(),
-            label = { Text(stringResource(R.string.bonus)) },
-            singleLine = true,
-            isError = bonusError,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
+            onValueChange = {bonus = it},
+            text = stringResource(R.string.bonus)
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -213,12 +208,11 @@ fun IdentifierBonusRuleInputComponent (
             text = stringResource(R.string.slide_to_confirm),
             enabled = sliderActive
         ) {
-            val parsedBonus = bonus.toDoubleOrNull()
+            val parsedBonus = bonus.toDouble()
 
             studentsError = selectedStudents.isEmpty()
-            bonusError = parsedBonus == null || parsedBonus !in 0.0..1.0
 
-            if (!studentsError && !bonusError) {
+            if (!studentsError) {
                 val values = selectedStudents
                     .mapNotNull { student ->
                         extractIdentifierValue(student, selectedField)
@@ -229,7 +223,7 @@ fun IdentifierBonusRuleInputComponent (
                     val body = IdentifierBonusRuleBody(
                         field = selectedField,
                         values = values,
-                        bonus = parsedBonus!!
+                        bonus = parsedBonus
                     )
                     sliderActive = false
                     onConfirm(

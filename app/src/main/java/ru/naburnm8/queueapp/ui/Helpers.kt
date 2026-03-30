@@ -1,6 +1,7 @@
 package ru.naburnm8.queueapp.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import ru.naburnm8.queueapp.R
 
@@ -35,4 +36,9 @@ fun Double.toImportanceReadableText(): String {
         in 0.67..1.0 -> stringResource(R.string.high)
         else -> ""
     }
+}
+
+@Composable
+fun Float.toImportanceReadableText(): String {
+    return this.toDouble().toImportanceReadableText()
 }

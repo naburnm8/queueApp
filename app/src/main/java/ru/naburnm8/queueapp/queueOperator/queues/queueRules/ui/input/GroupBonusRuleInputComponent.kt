@@ -23,6 +23,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -41,6 +42,7 @@ import ru.naburnm8.queueapp.authorization.ui.main.SlideToConfirm
 import ru.naburnm8.queueapp.queueOperator.queues.queueRules.body.GroupBonusRuleBody
 import ru.naburnm8.queueapp.queueOperator.queues.queueRules.entity.QueueRuleEntity
 import ru.naburnm8.queueapp.queueOperator.queues.queueRules.entity.RuleType
+import ru.naburnm8.queueapp.ui.ImportancePickerComponent
 import ru.naburnm8.queueapp.ui.checkNotInBoundaries
 import ru.naburnm8.queueapp.ui.filterDoubleInput
 import ru.naburnm8.queueapp.ui.theme.QueueAppTheme
@@ -80,7 +82,7 @@ fun GroupBonusRuleInputComponent(
         mutableStateOf(initialBody?.groups ?: emptyList())
     }
     var bonus by remember {
-        mutableStateOf(initialBody?.bonus?.toString() ?: "")
+        mutableFloatStateOf(initialBody?.bonus?.toFloat() ?: 0.5f)
     }
     var enabled by remember {
         mutableStateOf(editingRule?.enabled ?: true)
@@ -173,17 +175,10 @@ fun GroupBonusRuleInputComponent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        OutlinedTextField(
+        ImportancePickerComponent(
             value = bonus,
-            onValueChange = {
-                bonus = filterDoubleInput(it)
-                bonusError = checkNotInBoundaries(bonus)
-            },
-            modifier = Modifier.fillMaxWidth(),
-            label = { Text(stringResource(R.string.bonus)) },
-            singleLine = true,
-            isError = bonusError,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
+            onValueChange = {bonus = it},
+            text = stringResource(R.string.bonus)
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -192,15 +187,14 @@ fun GroupBonusRuleInputComponent(
             text = stringResource(R.string.slide_to_confirm),
             enabled = sliderActive,
         ) {
-            val parsedBonus = bonus.toDoubleOrNull()
+            val parsedBonus = bonus.toDouble()
 
             groupsError = selectedGroups.isEmpty()
-            bonusError = parsedBonus == null || parsedBonus !in 0.0..1.0
 
-            if (!groupsError && !bonusError) {
+            if (!groupsError) {
                 val body = GroupBonusRuleBody(
                     groups = selectedGroups,
-                    bonus = parsedBonus!!
+                    bonus = parsedBonus
                 )
                 sliderActive = false
                 onConfirm(
