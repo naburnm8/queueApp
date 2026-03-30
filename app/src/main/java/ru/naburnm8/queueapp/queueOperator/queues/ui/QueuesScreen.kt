@@ -186,7 +186,7 @@ fun QueuesComponent(
             QueueListComponent(
                 queues = activeQueues,
                 queuePlans = queuePlans,
-                onQueueClick = {onQueueClick(it)},
+                onQueueClick = { onQueueClick(it) },
                 onStatusToggle = {onStatusToggle(it)}
             )
             Spacer(modifier = Modifier.height(24.dp))
@@ -368,7 +368,11 @@ fun QueueListItem(
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(16.dp))
                 .background(MaterialTheme.colorScheme.surface)
-                .clickable { onQueueClick() }
+                .clickable {
+                    if (queue.queueStatus != QueueStatus.DRAFT) {
+                        onQueueClick()
+                    }
+                }
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {

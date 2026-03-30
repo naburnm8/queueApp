@@ -183,8 +183,8 @@ fun QueuesViewAndInteractionComponent(
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = onTakeNext,
-            enabled = queue.entries.isNotEmpty()
+            onClick = { onTakeNext() },
+            enabled = queue.entries.isNotEmpty() && queue.queueStatus == QueueStatus.ACTIVE
         ) {
             Text(text = stringResource(R.string.take_next))
         }
@@ -209,7 +209,8 @@ fun QueuesViewAndInteractionComponent(
                     entry = queue.current,
                     onRemove = {},
                     onEnqueue = {onTakeNext()},
-                    removeDisabled = true
+                    removeDisabled = true,
+                    queueStatus = queue.queueStatus
                 )
             } else {
                 Text(
@@ -255,7 +256,8 @@ fun QueuesViewAndInteractionComponent(
                     QueueEntryItem(
                         entry = it,
                         onRemove = {onRemove(it.requestId)},
-                        onEnqueue = {onTake(it.requestId)}
+                        onEnqueue = {onTake(it.requestId)},
+                        queueStatus = queue.queueStatus
                     )
                 }
             }
@@ -266,7 +268,8 @@ fun QueuesViewAndInteractionComponent(
             SubmissionRequestsListComponent(
                 requests = requests,
                 onApprove = onApproveRequest,
-                onReject = onRejectRequest
+                onReject = onRejectRequest,
+                queueStatus = queue.queueStatus
             )
         }
     }
@@ -278,10 +281,13 @@ fun SubmissionRequestsListComponent(
     modifier: Modifier = Modifier,
     requests: List<SubmissionRequestShortEntity>,
     onApprove: (UUID) -> Unit,
-    onReject: (UUID) -> Unit
+    onReject: (UUID) -> Unit,
+    queueStatus: QueueStatus
 ) {
 
     var expanded by remember {mutableStateOf(false)}
+
+    val interactionsEnabled = queueStatus == QueueStatus.ACTIVE
 
     Column (
         modifier = modifier
@@ -327,7 +333,8 @@ fun SubmissionRequestsListComponent(
                     SubmissionRequestListItem(
                         request = it,
                         onApprove = {onApprove(it.id)},
-                        onReject = {onReject(it.id)}
+                        onReject = {onReject(it.id)},
+                        interactionsEnabled = interactionsEnabled
                     )
                 }
             }
@@ -342,7 +349,8 @@ fun SubmissionRequestListItem(
     modifier: Modifier = Modifier,
     request: SubmissionRequestShortEntity,
     onApprove: () -> Unit,
-    onReject: () -> Unit
+    onReject: () -> Unit,
+    interactionsEnabled: Boolean = true
 ) {
     var showRejectDialog by remember{mutableStateOf(false)}
     val scope = rememberCoroutineScope ()
@@ -405,8 +413,8 @@ fun SubmissionRequestListItem(
                 )
             }
         },
-        enableDismissFromStartToEnd = true,
-        enableDismissFromEndToStart = true
+        enableDismissFromStartToEnd = interactionsEnabled,
+        enableDismissFromEndToStart = interactionsEnabled
     ) {
         Row(
             modifier = Modifier
@@ -464,6 +472,7 @@ fun QueueEntryItem(
     entry: QueueEntryViewEntity,
     onRemove: () -> Unit,
     onEnqueue: () -> Unit,
+    queueStatus: QueueStatus,
     removeDisabled: Boolean = false,
 ) {
     var showRemoveDialog by remember {mutableStateOf(false)}
@@ -481,6 +490,8 @@ fun QueueEntryItem(
             }
         }
     )
+
+    val interactionsEnabled = queueStatus == QueueStatus.ACTIVE
 
     if (showRemoveDialog) {
         GenericDeleteDialog(
@@ -532,8 +543,8 @@ fun QueueEntryItem(
             }
         },
         enableDismissFromStartToEnd = false,
-        enableDismissFromEndToStart = !removeDisabled,
-        gesturesEnabled = !removeDisabled
+        enableDismissFromEndToStart = !removeDisabled && interactionsEnabled,
+        gesturesEnabled = !removeDisabled && interactionsEnabled
     ) {
         Row(
             modifier = Modifier
@@ -541,7 +552,7 @@ fun QueueEntryItem(
                 .clip(RoundedCornerShape(16.dp))
                 .background(MaterialTheme.colorScheme.surface)
                 .clickable {
-                    if (!removeDisabled) {
+                    if (!removeDisabled && interactionsEnabled) {
                         showEnqueueDialog = true
                     }
                 }
