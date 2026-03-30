@@ -129,6 +129,7 @@ fun QueueListComponent(
                 .clip(RoundedCornerShape(30.dp))
                 .background(MaterialTheme.colorScheme.primaryContainer)
                 .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             if (queues.isEmpty()) {
                 item {
