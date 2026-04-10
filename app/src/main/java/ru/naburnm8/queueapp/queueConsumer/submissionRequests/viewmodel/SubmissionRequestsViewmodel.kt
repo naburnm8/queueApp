@@ -16,12 +16,14 @@ import ru.naburnm8.queueapp.queueConsumer.submissionRequests.repository.Submissi
 import ru.naburnm8.queueapp.queueOperator.discipline.entity.DisciplinesMapper
 import ru.naburnm8.queueapp.queueOperator.discipline.repository.StudentDisciplineRepository
 import ru.naburnm8.queueapp.queueOperator.queues.queuePlans.request.QueueStatus
+import ru.naburnm8.queueapp.websocket.QueueUpdatesManager
 
 class SubmissionRequestsViewmodel (
     private val submissionRequestsRepository: SubmissionRequestsRepository,
     private val queuePlansShortRepository: QueuePlansShortRepository,
     private val profileRepository: ProfileRepository,
-    private val disciplinesRepository: StudentDisciplineRepository
+    private val disciplinesRepository: StudentDisciplineRepository,
+    private val queueUpdatesManager: QueueUpdatesManager
 ) : ViewModel() {
     private val _stateFlow = MutableStateFlow<SubmissionRequestsState>(SubmissionRequestsState.Loading)
     val stateFlow = _stateFlow.asStateFlow()
@@ -76,6 +78,7 @@ class SubmissionRequestsViewmodel (
         _stateFlow.value = SubmissionRequestsState.Loading
         viewModelScope.launch {
             runCatching {
+                queueUpdatesManager.untrackQueue(req.queuePlanId, true)
                 submissionRequestsRepository.deleteMySubmissionRequest(req.queuePlanId).getOrThrow()
                 loadMyRequestsInner(onSuccess)
             }.onFailure {
@@ -135,6 +138,7 @@ class SubmissionRequestsViewmodel (
                     currentState.inputBundle.queuePlan.id,
                     SubmissionRequestsMapper.toRequest(req, code)
                 ).getOrThrow()
+                queueUpdatesManager.trackQueue(req.queuePlanId, true)
                 loadMyRequestsInner(onSuccess)
             }.onFailure {
                 _stateFlow.value = SubmissionRequestsState.Error(it.message ?: "Unknown error")

@@ -45,6 +45,36 @@ class QueueViewmodel (
                 reloadOneQueue(event.queueId)
             }
         }
+        viewModelScope.launch {
+            queueUpdatesManager.trackFlow.collect {
+                Log.d("QueueViewmodel", "Track with $it recieved")
+                loadQueues()
+            }
+        }
+
+        viewModelScope.launch {
+            queueUpdatesManager.untrackFlow.collect {
+                Log.d("QueueViewmodel", "Untrack with $it recieved")
+                untrackQueue(it)
+            }
+        }
+    }
+
+    fun untrackQueue(queueId: UUID) {
+        val currentState = _stateFlow.value
+        if (currentState !is QueueState.Main) return
+
+        val map = currentState.myRequestByQueue.toMutableMap()
+
+        map.keys.removeIf { it.queuePlanId == queueId }
+
+        val newState = QueueState.Main(
+            queues = currentState.queues.filter { it.queuePlanId != queueId },
+            queuePlans = currentState.queuePlans.filter { it.id != queueId },
+            myRequestByQueue = map,
+            currentQueueRules = currentState.currentQueueRules
+        )
+        _stateFlow.value = newState
     }
 
     fun loadQueueRules(queueId: UUID, onSuccess: () -> Unit) {

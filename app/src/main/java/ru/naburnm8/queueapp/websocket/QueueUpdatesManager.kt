@@ -5,6 +5,7 @@ import io.reactivex.disposables.Disposable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -53,6 +54,12 @@ class QueueUpdatesManager (
     )
 
     val sessionExpired = _sessionExpired.asSharedFlow()
+
+    private val _untrackFlow = MutableSharedFlow<UUID>()
+    val untrackFlow = _untrackFlow.asSharedFlow()
+
+    private val _trackFlow = MutableSharedFlow<UUID>()
+    val trackFlow = _trackFlow.asSharedFlow()
 
     @Volatile
     private var isConnecting = false
@@ -150,13 +157,18 @@ class QueueUpdatesManager (
         }
     }
 
-    fun trackQueue(queuePlanId: UUID) {
+    fun trackQueue(queuePlanId: UUID, notify: Boolean = false) {
         Log.d(NAME, "Tracking queue $queuePlanId")
         val newCount = (trackedQueueRefs[queuePlanId] ?: 0) + 1
         trackedQueueRefs[queuePlanId] = newCount
 
         if (newCount == 1 && stompClient.isConnected) {
             subscribe(queuePlanId)
+            if (notify) {
+                scope.launch {
+                    _trackFlow.emit(queuePlanId)
+                }
+            }
         }
     }
 
@@ -165,7 +177,7 @@ class QueueUpdatesManager (
         queuePlanIds.forEach { trackQueue(it) }
     }
 
-    fun untrackQueue(queuePlanId: UUID) {
+    fun untrackQueue(queuePlanId: UUID, notify: Boolean = false) {
         val current = trackedQueueRefs[queuePlanId] ?: return
 
         if (current <= 1) {
@@ -173,6 +185,13 @@ class QueueUpdatesManager (
             subscriptions.remove(queuePlanId)?.dispose()
         } else {
             trackedQueueRefs[queuePlanId] = current - 1
+        }
+
+        if (notify) {
+            scope.launch {
+                Log.d(NAME, "Notifying of queue untracking with id $queuePlanId")
+                _untrackFlow.emit(queuePlanId)
+            }
         }
     }
     fun untrackAll() {
