@@ -61,7 +61,8 @@ fun RegistrationChoiceScreen(
     ) {
         Text(
             text = stringResource(R.string.choose_role),
-            style = MaterialTheme.typography.headlineMedium
+            style = MaterialTheme.typography.headlineMedium,
+            color = MaterialTheme.colorScheme.onBackground
         )
         Spacer(modifier = Modifier.height(16.dp))
 

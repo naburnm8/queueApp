@@ -51,6 +51,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 import ru.naburnm8.queueapp.R
 import ru.naburnm8.queueapp.queueConsumer.queue.queuePlans.entity.QueuePlanShortEntity
@@ -378,7 +379,8 @@ private fun SubmissionRequestItem (
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Row (
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.weight(0.8f)
             ) {
                 Icon(
                     painter = painterResource(R.drawable.submission_request),
@@ -392,6 +394,7 @@ private fun SubmissionRequestItem (
                 Column() {
                     Text(
                         text = plan.title,
+                        fontSize = 16.sp,
                         style = MaterialTheme.typography.headlineSmall,
                         color = MaterialTheme.colorScheme.onSurface
                     )
@@ -399,12 +402,14 @@ private fun SubmissionRequestItem (
                     Text(
                         text = plan.discipline.name,
                         color = MaterialTheme.colorScheme.onSurface,
+                        fontSize = 13.sp,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
 
                     Text(
                         text = "${stringResource(R.string.status)}: ${request.status.toReadableText()}",
+                        fontSize = 13.sp,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 }
@@ -412,7 +417,7 @@ private fun SubmissionRequestItem (
 
             Row (
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.weight(1.0f)
+                modifier = Modifier.weight(0.2f)
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
