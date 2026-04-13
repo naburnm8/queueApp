@@ -30,15 +30,13 @@ class QueueUpdatesManager (
     }
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
-    private val stompClient: StompClient =
-        Stomp.over(
-            Stomp.ConnectionProvider.OKHTTP,
-            "ws://$api/ws"
-        )
-
     private val trackedQueueRefs = ConcurrentHashMap<UUID, Int>()
     private val subscriptions = ConcurrentHashMap<UUID, Disposable>()
 
+    private val stompClient: StompClient = Stomp.over(
+        Stomp.ConnectionProvider.OKHTTP,
+        "ws://$api/ws"
+    )
     private var lifecycleDisposable: Disposable? = null
 
     private val _updates = MutableSharedFlow<QueueUpdateEvent> (
@@ -282,6 +280,15 @@ class QueueUpdatesManager (
     private fun clearAllSubscriptions() {
         subscriptions.values.forEach { it.dispose() }
         subscriptions.clear()
+    }
+
+    internal suspend fun emitUpdateForTest(queueId: UUID, version: Long){
+        _updates.emit(
+            QueueUpdateEvent(
+                queueId,
+                version
+            )
+        )
     }
 
 

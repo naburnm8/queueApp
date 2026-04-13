@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.first
 private val Context.tokenDataStore by preferencesDataStore(name = "auth_tokens")
 
 class TokenStorageImpl(
-    private val context: Context
+    private val context: Context,
 ) : TokenStorage {
     private companion object {
         val ACCESS_TOKEN = stringPreferencesKey("access_token")

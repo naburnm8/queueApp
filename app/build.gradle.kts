@@ -87,5 +87,8 @@ dependencies {
     implementation("io.reactivex.rxjava2:rxjava:2.2.21")
 
 
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:...")
+
+    testImplementation("org.robolectric:robolectric:4.16")
 
 }
