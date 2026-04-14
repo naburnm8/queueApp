@@ -224,12 +224,7 @@ private fun DisciplineGroupItem(
             Button(
                 onClick = {onCreateMetricInDisciplineClick()},
                 modifier = Modifier.fillMaxWidth(),
-                colors = ButtonColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    contentColor = MaterialTheme.colorScheme.onSurface,
-                    disabledContainerColor = MaterialTheme.colorScheme.errorContainer,
-                    disabledContentColor = MaterialTheme.colorScheme.onErrorContainer
-                )
+
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,

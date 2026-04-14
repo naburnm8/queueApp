@@ -1,3 +1,15 @@
+import java.util.Properties
+
+val localProperties = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) {
+        file.inputStream().use {load(it)}
+    }
+}
+
+val devApiBaseUrl = localProperties.getProperty("api.base.url") ?: "http://10.0.2.2:8081/"
+val devApiSocket = localProperties.getProperty("api.socket") ?: "10.0.2.2:8081"
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -37,8 +49,26 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
+    flavorDimensions += "env"
+
     buildFeatures {
         compose = true
+        buildConfig = true
+    }
+
+    productFlavors {
+        create("dev") {
+            dimension = "env"
+            buildConfigField("String", "API_BASE_URL", "\"$devApiBaseUrl\"")
+            buildConfigField("String", "API_SOCKET", "\"$devApiSocket\"")
+        }
+
+        create("stage") {
+            dimension = "env"
+            buildConfigField("String", "API_BASE_URL", "\"https://mindleak.com/\"")
+            buildConfigField("String", "API_SOCKET", "\"mindleak.com\"")
+        }
     }
 }
 

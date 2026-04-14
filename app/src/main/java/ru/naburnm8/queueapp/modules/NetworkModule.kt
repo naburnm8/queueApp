@@ -9,6 +9,7 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
+import ru.naburnm8.queueapp.BuildConfig
 import ru.naburnm8.queueapp.authorization.api.AuthorizationApi
 import ru.naburnm8.queueapp.authorization.api.RefreshApi
 import ru.naburnm8.queueapp.authorization.api.IntegrationApi
@@ -32,15 +33,14 @@ import ru.naburnm8.queueapp.queueOperator.queues.queueRules.api.QueueRulesApi
 import ru.naburnm8.queueapp.websocket.QueueUpdatesManager
 import java.util.concurrent.TimeUnit
 
-private const val DEBUG_SOCKET = "10.0.2.2:8081"
-private const val DEBUG_URL = "http://$DEBUG_SOCKET/"
-
 private val json = Json {
     ignoreUnknownKeys = true
     coerceInputValues = true
 }
 
 val networkModule = module {
+    single(named("api_base_url")) { BuildConfig.API_BASE_URL }
+    single(named("api_socket")) { BuildConfig.API_SOCKET }
 
     single {
         HttpLoggingInterceptor().apply {
@@ -66,7 +66,7 @@ val networkModule = module {
 
     single(named("auth_retrofit")) {
         Retrofit.Builder()
-            .baseUrl(DEBUG_URL)
+            .baseUrl(get<String>(named("api_base_url")))
             .client(get<OkHttpClient>(named("auth_okhttp")))
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
             .build()
@@ -120,7 +120,7 @@ val networkModule = module {
 
     single(named("main_retrofit")) {
         Retrofit.Builder()
-            .baseUrl(DEBUG_URL)
+            .baseUrl(get<String>(named("api_base_url")))
             .client(get<OkHttpClient>(named("main_okhttp")))
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
             .build()
@@ -164,7 +164,7 @@ val networkModule = module {
 
     single {
         QueueUpdatesManager(
-            DEBUG_SOCKET,
+            get<String>(named("api_socket")),
             get(),
         )
     }
