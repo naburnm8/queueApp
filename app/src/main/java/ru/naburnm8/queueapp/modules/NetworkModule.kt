@@ -48,7 +48,7 @@ val networkModule = module {
         }
     }
 
-    single<TokenStorage> {
+    single<TokenStorage> (named("plaintext")) {
         TokenStorageImpl(androidContext())
     }
 

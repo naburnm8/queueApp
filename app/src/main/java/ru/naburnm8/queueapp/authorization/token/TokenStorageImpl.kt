@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.first
 
 private val Context.tokenDataStore by preferencesDataStore(name = "auth_tokens")
 
+@Deprecated("Unsafe. Use EncryptedTokenStorage instead.")
 class TokenStorageImpl(
     private val context: Context,
 ) : TokenStorage {

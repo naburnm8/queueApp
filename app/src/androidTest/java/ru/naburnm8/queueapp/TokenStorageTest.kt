@@ -11,6 +11,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import ru.naburnm8.queueapp.authorization.token.TokenStorage
 import ru.naburnm8.queueapp.authorization.token.TokenStorageImpl
+import ru.naburnm8.queueapp.authorization.token.encrypted.EncryptedTokenStorage
 
 
 @RunWith(AndroidJUnit4::class)
@@ -19,10 +20,13 @@ class TokenStorageTest {
     private lateinit var context: Context
     private lateinit var tokenStorage: TokenStorage
 
+    private lateinit var encryptedTokenStorage: TokenStorage
+
     @Before
     fun setup() {
         context = ApplicationProvider.getApplicationContext()
         tokenStorage = TokenStorageImpl(context)
+        encryptedTokenStorage = EncryptedTokenStorage(context)
     }
 
     @Test
@@ -41,8 +45,25 @@ class TokenStorageTest {
         assertEquals("refresh token test", refresh)
     }
 
+    @Test
+    fun saveAndRetrieveTokensEncrypted() = runBlocking {
+        encryptedTokenStorage.clear()
+
+        encryptedTokenStorage.saveTokens(
+            accessToken = "access token test",
+            refreshToken = "refresh token test"
+        )
+
+        val access = encryptedTokenStorage.getAccessToken()
+        val refresh = encryptedTokenStorage.getRefreshToken()
+
+        assertEquals("access token test", access)
+        assertEquals("refresh token test", refresh)
+    }
+
     @After
     fun teardown() = runBlocking {
         tokenStorage.clear()
+        encryptedTokenStorage.clear()
     }
 }

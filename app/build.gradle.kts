@@ -110,7 +110,7 @@ dependencies {
 
     //prefs
     implementation("androidx.datastore:datastore-preferences:1.2.0")
-    implementation("com.google.crypto.tink:tink-android:1.7.0")
+    implementation("com.google.crypto.tink:tink-android:1.13.0")
 
     //stomp
     implementation("com.github.NaikSoftware:StompProtocolAndroid:1.6.6")
